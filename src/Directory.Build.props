@@ -1,0 +1,12 @@
+﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <PropertyGroup Label="PackageInfo">
+    <Authors>.NET Foundation and Contributors</Authors>
+    <Copyright>© .NET Foundation</Copyright>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <PackageProjectUrl>https://github.com/novotnyllc/MSBuildSdkExtras</PackageProjectUrl>
+    <PackageLicenseUrl>https://github.com/novotnyllc/MSBuildSdkExtras/blob/master/LICENSE.md</PackageLicenseUrl>
+    <PackageReleaseNotes>https://github.com/novotnyllc/MSBuildSdkExtras/blob/master/README.md</PackageReleaseNotes>
+  </PropertyGroup>
+
+</Project>
