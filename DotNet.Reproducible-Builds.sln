@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.28902.138
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DotNet.Reproducible-Builds", "src\DotNet.Reproducible-Builds\DotNet.Reproducible-Builds.csproj", "{0EC324B8-28BF-47A9-A9A2-120E1BA880F7}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{0EC324B8-28BF-47A9-A9A2-120E1BA880F7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0EC324B8-28BF-47A9-A9A2-120E1BA880F7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0EC324B8-28BF-47A9-A9A2-120E1BA880F7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0EC324B8-28BF-47A9-A9A2-120E1BA880F7}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {CBF43E2D-1F5F-4D6E-8E08-AB2D1BB57CF6}
+	EndGlobalSection
+EndGlobal
