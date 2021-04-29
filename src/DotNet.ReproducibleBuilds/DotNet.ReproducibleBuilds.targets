@@ -6,8 +6,11 @@
     <!-- Embed source files that are not tracked by the source control manager in the PDB -->
     <EmbedUntrackedSources Condition=" '$(EmbedUntrackedSources)' == '' ">true</EmbedUntrackedSources>
 
-    <!-- Enable WPF projects to process package references so source link works -->
-    <IncludePackageReferencesDuringMarkupCompilation Condition=" '$(IncludePackageReferencesDuringMarkupCompilation)' == '' " >true</IncludePackageReferencesDuringMarkupCompilation>
+    <!-- Enable WPF projects to process package references so source link works 
+         We only need this enabled for 5.0 SDKs; 6.0 defaults to it on.
+    -->
+    <IncludePackageReferencesDuringMarkupCompilation 
+      Condition=" '$(IncludePackageReferencesDuringMarkupCompilation)' == '' and '$(BundledNETCoreAppTargetFrameworkVersion)' == '5.0' " >true</IncludePackageReferencesDuringMarkupCompilation>
   </PropertyGroup>
 
   <PropertyGroup>
