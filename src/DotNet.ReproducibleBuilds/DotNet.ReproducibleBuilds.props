@@ -57,16 +57,4 @@
     <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
   </PropertyGroup>
 
-
-  <PropertyGroup>
-    <_ReproducibleBuildsMSBuildMinVersion>16.9.0</_ReproducibleBuildsMSBuildMinVersion>
-  </PropertyGroup>
-
-  <Target Name="_ReproducibleBuildsMSBuildVersionCheck"
-        Condition=" '$([System.Version]::Parse($(_ReproducibleBuildsMSBuildMinVersion)).CompareTo($([System.Version]::Parse($(MSBuildVersion)))))' &gt; '0' "
-   BeforeTargets="ResolveAssemblyReferences;Build;Rebuild" >
-    <Warning
-        Text = "Reproducible builds require MSBuild '$(_ReproducibleBuildsMSBuildMinVersion)' or later. This project is using '$(MSBuildVersion)'." />
-  </Target>
-
 </Project>
