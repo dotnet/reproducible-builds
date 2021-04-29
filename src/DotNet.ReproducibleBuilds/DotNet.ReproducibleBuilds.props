@@ -57,4 +57,11 @@
     <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
   </PropertyGroup>
 
+  <!-- TeamCity
+  https://www.jetbrains.com/help/teamcity/predefined-build-parameters.html#Server+Build+Properties
+  -->
+  <PropertyGroup Condition="'$(TEAMCITY_VERSION)' != '' ">
+    <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
+  </PropertyGroup>
+
 </Project>
