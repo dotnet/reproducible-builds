@@ -2,7 +2,7 @@
   <PropertyGroup>
 
     <!-- Recommended: Embed symbols containing Source Link in the main file (exe/dll) -->
-    <DebugType>embedded</DebugType>
+    <DebugType Condition=" '$(DebugType)' == '' ">embedded</DebugType>
     
   </PropertyGroup>
   
