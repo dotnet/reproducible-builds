@@ -11,40 +11,30 @@
     <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
     <EnableDefaultEmbeddedResourceItems>false</EnableDefaultEmbeddedResourceItems>
     <GenerateAssemblyVersionInfo>false</GenerateAssemblyVersionInfo>
+    <NuspecFile>DotNet.ReproducibleBuilds.nuspec</NuspecFile>
   </PropertyGroup>
-
-  <PropertyGroup Label="PackageInfo">
-    <Authors>.NET Foundation and Contributors</Authors>
-    <Copyright>© .NET Foundation</Copyright>
-    <PublishRepositoryUrl>true</PublishRepositoryUrl>
-    <PackageProjectUrl>https://github.com/dotnet/reproducible-builds</PackageProjectUrl>
-    <PackageLicenseUrl>https://github.com/dotnet/reproducible-builds/blob/main/LICENSE</PackageLicenseUrl>
-    <PackageReleaseNotes>https://github.com/dotnet/reproducible-builds/blob/main/README.md</PackageReleaseNotes>
-  </PropertyGroup>
-
+ 
 
   <ItemGroup>
     <IntermediateAssembly Remove="@(IntermediateAssembly)"/>
     <IntermediateRefAssembly Remove="@(IntermediateRefAssembly)"/>
-    <PackageReference Update="NETStandard.Library" PrivateAssets="all" />
   </ItemGroup>
 
-
   <ItemGroup>
-    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" />
-    <PackageReference Include="Microsoft.SourceLink.AzureRepos.Git" Version="1.0.0" />
-    <PackageReference Include="Microsoft.SourceLink.AzureDevOpsServer.Git" Version="1.0.0" />
-    <PackageReference Include="Microsoft.SourceLink.GitLab" Version="1.0.0" />
-    <PackageReference Include="Microsoft.SourceLink.Bitbucket.Git" Version="1.0.0" />
-
     <PackageReference Include="Nerdbank.GitVersioning" Version="3.4.194" PrivateAssets="all" />
   </ItemGroup>
 
+  <Target Name="SetBuildVer" AfterTargets="GetBuildVersion" BeforeTargets="SetCloudBuildVersionVars;SetCloudBuildNumberWithVersion">
+    <PropertyGroup>
+      <CloudBuildNumber>$(BuildVersion)</CloudBuildNumber>
+      <Version>$(BuildVersion)</Version>
+      <PackageVersion>$(BuildVersion)</PackageVersion>
+      <NuGetPackageVersion>$(BuildVersionSimple)</NuGetPackageVersion>
+      <AssemblyVersion>$(BuildVersionSimple)</AssemblyVersion>
 
-  <ItemGroup>
-    <None Include="DotNet.ReproducibleBuilds.props"   Pack="true" PackagePath="build" />
-    <None Include="DotNet.ReproducibleBuilds.targets" Pack="true" PackagePath="build" />
-    <None Include="DotNet.ReproducibleBuilds.props"   Pack="true" PackagePath="buildMultiTargeting" />
-    <None Include="DotNet.ReproducibleBuilds.targets" Pack="true" PackagePath="buildMultiTargeting" />
-  </ItemGroup>
+      <NuspecProperties>version=$(NuGetPackageVersion);RepositoryType=git;RepositoryCommit=$(GitCommitId);RepositoryUrl=$(GitRepositoryUrl)</NuspecProperties>
+
+    </PropertyGroup>
+
+  </Target>
 </Project>

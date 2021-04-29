@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
+  <metadata>
+    <id>DotNet.ReproducibleBuilds</id>
+    <version>$version$</version>
+    <authors>.NET Foundation and Contributors</authors>
+    <developmentDependency>true</developmentDependency>
+    <licenseUrl>https://github.com/dotnet/reproducible-builds/blob/main/LICENSE</licenseUrl>
+    <projectUrl>https://github.com/dotnet/reproducible-builds</projectUrl>
+    <description>Enables reproducible build settings</description>
+    <releaseNotes>https://github.com/dotnet/reproducible-builds/blob/main/README.md</releaseNotes>
+    <copyright>© .NET Foundation</copyright>
+    <repository type="git" url="https://github.com/dotnet/reproducible-builds" commit="$RepositoryCommit$" />
+    <dependencies>
+      <dependency id="Microsoft.SourceLink.AzureDevOpsServer.Git" version="1.0.0" />
+      <dependency id="Microsoft.SourceLink.AzureRepos.Git" version="1.0.0" />
+      <dependency id="Microsoft.SourceLink.Bitbucket.Git" version="1.0.0" />
+      <dependency id="Microsoft.SourceLink.GitLab" version="1.0.0" />
+    </dependencies>
+  </metadata>
+  <files>
+    <file src="DotNet.ReproducibleBuilds.props" target="build\DotNet.ReproducibleBuilds.props" />
+    <file src="DotNet.ReproducibleBuilds.props" target="buildMultiTargeting\DotNet.ReproducibleBuilds.props" />
+    <file src="DotNet.ReproducibleBuilds.targets" target="build\DotNet.ReproducibleBuilds.targets" />
+    <file src="DotNet.ReproducibleBuilds.targets" target="buildMultiTargeting\DotNet.ReproducibleBuilds.targets" />
+  </files>
+</package>
