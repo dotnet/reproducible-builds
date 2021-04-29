@@ -72,7 +72,7 @@
   <Target Name="_ReproducibleBuildsMSBuildVersionCheck"
         Condition=" '$([System.Version]::Parse($(_ReproducibleBuildsMSBuildMinVersion)).CompareTo($([System.Version]::Parse($(MSBuildVersion)))))' &gt; '0' "
    BeforeTargets="ResolveAssemblyReferences;Build;Rebuild" >
-    <Warn
+    <Warning
         Text = "Reproducible builds require MSBuild '$(_ReproducibleBuildsMSBuildMinVersion)' or later. This project is using '$(MSBuildVersion)'." />
   </Target>
 
