@@ -34,7 +34,7 @@ stages:
         mkdir $(Build.ArtifactStagingDirectory)\Packages
         $version = .\nbgv get-version -f json | ConvertFrom-Json        
         
-        nuget pack  DotNet.ReproducibleBuilds.nuspec `
+        nuget pack  $(System.DefaultWorkingDirectory)\src\DotNet.ReproducibleBuilds\DotNet.ReproducibleBuilds.nuspec `
                     -outputdirectory $(Build.ArtifactStagingDirectory)\Packages `
                     -basepath $(System.DefaultWorkingDirectory)\src\DotNet.ReproducibleBuilds `
                     -NoPackageAnalysis `
