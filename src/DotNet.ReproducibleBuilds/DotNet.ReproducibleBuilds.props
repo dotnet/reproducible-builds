@@ -1,0 +1,72 @@
+﻿<Project>
+  <PropertyGroup>
+
+    <!-- Recommended: Embed symbols containing Source Link in the main file (exe/dll) -->
+    <DebugType Condition=" '$(DebugType)' == '' ">embedded</DebugType>
+    
+  </PropertyGroup>
+  
+  <!-- Enable ContinuousIntegrationBuild when running on CI -->
+
+  <!-- Azure Pipelines / DevOpsServer -->
+  <PropertyGroup Condition="'$(TF_BUILD)' == 'true'">
+    <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
+  </PropertyGroup>
+  
+  <!-- GitHub Actions -->
+  <PropertyGroup Condition="'$(GITHUB_ACTIONS)' == 'true'">
+    <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
+  </PropertyGroup>
+  
+  <!-- AppVeyor -->
+  <PropertyGroup Condition="'$(APPVEYOR)' == 'true'">
+    <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
+  </PropertyGroup>
+  
+  <!-- Set by many build agents -->
+  <PropertyGroup Condition="'$(CI)' == 'true'">
+    <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
+  </PropertyGroup>
+  
+  <!-- Travis CI -->
+  <PropertyGroup Condition="'$(TRAVIS)' == 'true'">
+    <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
+  </PropertyGroup>
+  
+  <!-- Circle CI -->
+  <PropertyGroup Condition="'$(CIRCLECI)' == 'true'">
+    <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
+  </PropertyGroup>
+  
+  <!-- AWS CodeBuild -->
+  <PropertyGroup Condition="'$(CODEBUILD_BUILD_ID)' != '' and '$(AWS_REGION)' != '' ">
+    <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
+  </PropertyGroup>
+
+  <!-- Google Cloud Build
+  https://www.jenkins.io/doc/book/pipeline/jenkinsfile/#using-environment-variables
+  -->  
+  <PropertyGroup Condition="'$(BUILD_ID)' != '' and '$(BUILD_URL)' != '' ">
+    <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
+  </PropertyGroup>
+
+  <!-- Jenkins
+  https://cloud.google.com/build/docs/configuring-builds/substitute-variable-values
+  -->
+  <PropertyGroup Condition="'$(BUILD_ID)' != '' and '$(PROJECT_ID)' != '' ">
+    <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
+  </PropertyGroup>
+
+
+  <PropertyGroup>
+    <_ReproducibleBuildsMSBuildMinVersion>16.9.0</_ReproducibleBuildsMSBuildMinVersion>
+  </PropertyGroup>
+
+  <Target Name="_ReproducibleBuildsMSBuildVersionCheck"
+        Condition=" '$([System.Version]::Parse($(_ReproducibleBuildsMSBuildMinVersion)).CompareTo($([System.Version]::Parse($(MSBuildVersion)))))' &gt; '0' "
+   BeforeTargets="ResolveAssemblyReferences;Build;Rebuild" >
+    <Warning
+        Text = "Reproducible builds require MSBuild '$(_ReproducibleBuildsMSBuildMinVersion)' or later. This project is using '$(MSBuildVersion)'." />
+  </Target>
+
+</Project>
