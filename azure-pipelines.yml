@@ -18,11 +18,6 @@ stages:
       DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
 
     steps:
-    - task: UseDotNet@2
-      displayName: 'Use .NET Core SDK 5.x'
-      inputs:
-        version: 5.x
-
     - task: DotNetCoreCLI@2  
       inputs:
         command: custom
@@ -39,7 +34,7 @@ stages:
         mkdir $(Build.ArtifactStagingDirectory)\Packages
         $version = .\nbgv get-version -f json | ConvertFrom-Json        
         
-        nuget pack  DotNet.ReproducibleBuilds.nuspec`
+        nuget pack  DotNet.ReproducibleBuilds.nuspec `
                     -outputdirectory $(Build.ArtifactStagingDirectory)\Packages `
                     -basepath $(System.DefaultWorkingDirectory)\src\DotNet.ReproducibleBuilds `
                     -NoPackageAnalysis `
