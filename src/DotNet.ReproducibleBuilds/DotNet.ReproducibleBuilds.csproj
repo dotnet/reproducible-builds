@@ -44,5 +44,7 @@
   <ItemGroup>
     <None Include="DotNet.ReproducibleBuilds.props"   Pack="true" PackagePath="build" />
     <None Include="DotNet.ReproducibleBuilds.targets" Pack="true" PackagePath="build" />
+    <None Include="DotNet.ReproducibleBuilds.props"   Pack="true" PackagePath="buildMultiTargeting" />
+    <None Include="DotNet.ReproducibleBuilds.targets" Pack="true" PackagePath="buildMultiTargeting" />
   </ItemGroup>
 </Project>
