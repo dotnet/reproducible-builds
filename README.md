@@ -12,6 +12,8 @@ This package sets the following properties:
 
 It also adds SourceLink dependencies for all repo types (the right one will be used automatically).
 
+For more information on debugging with Source Link is [here](https://devblogs.microsoft.com/dotnet/improving-debug-time-productivity-with-source-link/).
+
 ## Usage
 
 Add the following to your `Directory.Build.props` file so all projects in your solution have the package added -- use the latest package version.
