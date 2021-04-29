@@ -1,18 +1,29 @@
-# New Repo Project
+﻿# DotNet.ReproducibleBuilds
 
-The new-repo project is a default template for .NET Foundation projects. It's also probably a fine start for other .NET projects (have at it, but change the license). It contains the correct license, a decent README, and initial project structure (including a standard .gitignore for the Visual Studio family of products).
+This repo generates a package that enables reproducible builds in a single step. It's highly recommended that all projects enable these settings, either via
+adding this package or manually as described here: https://devblogs.microsoft.com/dotnet/producing-packages-with-source-link/
 
-You can learn more about the project from the project [Documentation](Documentation).
+This package sets the following properties:
+- `PublishRepositoryUrl` = `true`
+- `EmbedUntrackedSources` = `true`
+- `DebugType` = `embedded`
+- `IncludePackageReferencesDuringMarkupCompilation` = `true` (enables a fix for WPF)
+- `ContinuousIntegrationBuild` = `true` on CI systems
 
-## Using New Repo
+It also adds SourceLink dependencies for all repo types (the right one will be used automatically).
 
-You can simply `git clone` this project to get started. It is recommended that you don't preserve history of the project (it isn't generally meaningful) for your repo, but make a copy and `git init` your project from source.
+## Usage
 
-Consult [CHECKLIST.md] for helpful suggestions on preparing your repo to go public.
+Add the following to your `Directory.Build.props` file so all projects in your solution have the package added -- use the latest package version.
 
-## Building
+```xml
+<ItemGroup>
+  <PackageReference Include="DotNet.ReproducibleBuilds" Version="0.1.7" PrivateAssets="All"/>
+</ItemGroup>
+```
 
-You don't "build" New Repo, however, this will be meaningful for many other projects.
+Prerelease packages are available on the following [NuGet feed](https://dev.azure.com/dotnet/Projects/_packaging?_a=feed&feed=ReproducibleBuilds):
+`https://pkgs.dev.azure.com/dotnet/Projects/_packaging/ReproducibleBuilds/nuget/v3/index.json`
 
 ## Contributing
 
