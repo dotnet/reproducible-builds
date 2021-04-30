@@ -5,6 +5,10 @@
     <DebugType Condition=" '$(DebugType)' == '' ">embedded</DebugType>
     
   </PropertyGroup>
+
+  <ItemGroup>
+    <SourceLinkGitLabHost Include="gitlab.com" />
+  </ItemGroup>
   
   <!-- Enable ContinuousIntegrationBuild when running on CI -->
 
