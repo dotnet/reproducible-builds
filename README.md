@@ -6,7 +6,7 @@ adding this package or manually as described here: https://devblogs.microsoft.co
 This package sets the following properties:
 - `PublishRepositoryUrl` = `true`
 - `EmbedUntrackedSources` = `true`
-- `DebugType` = `embedded`. You can specify portable if you prefer, but you'll need to upload that `.snupkg` file too.
+- `DebugType` = `embedded`. You can specify `portable` in your project if you prefer, but you'll need to upload that `.snupkg` file too.
 - `IncludePackageReferencesDuringMarkupCompilation` = `true` (enables a fix for WPF)
 - `ContinuousIntegrationBuild` = `true` on CI systems
 
