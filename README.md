@@ -43,7 +43,7 @@ This project is licensed with the [MIT license](LICENSE).
 
 ## .NET Foundation
 
-New Repo is a [.NET Foundation project](https://dotnetfoundation.org/projects).
+DotNet.ReproducibleBuilds is a [.NET Foundation project](https://dotnetfoundation.org/projects).
 
 ## Related Projects
 
