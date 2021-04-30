@@ -14,9 +14,9 @@
     <dependencies>
       <!--<dependency id="Microsoft.SourceLink.AzureDevOpsServer.Git" version="1.0.0" />-->
       <dependency id="Microsoft.SourceLink.AzureRepos.Git" version="1.0.0" />
-      <!--<dependency id="Microsoft.SourceLink.Bitbucket.Git" version="1.0.0" />-->
+      <dependency id="Microsoft.SourceLink.Bitbucket.Git" version="1.0.0" />
       <dependency id="Microsoft.SourceLink.GitHub" version="1.0.0" />
-      <dependency id="Microsoft.SourceLink.GitLab" version="1.0.0" />      
+      <!--<dependency id="Microsoft.SourceLink.GitLab" version="1.0.0" />-->      
     </dependencies>
   </metadata>
   <files>
