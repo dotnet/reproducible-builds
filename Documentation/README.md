@@ -1,7 +1,14 @@
 # Documents Index
 
-This repo includes documents that explain how to use and build the product. It also provides detailed information about the project.
+## Reproducible-Dotnetsdk
 
-Here is a good example of this file: https://github.com/dotnet/coreclr/blob/master/Documentation/README.md.
+This folder documents various settings in MSBuild necessary for configuring repeatible builds through isolation.
 
-This is where a TOC goes!
+- [Reproducible MSBuild](./Reproducible-MSBuild/README.md)
+- [Organization](./Reproducible-MSBuild/Organization.md)
+- [Techniques](./Reproducible-MSBuild/Techniques/toc.md)
+- [References](./Reproducible-MSBuild/Introduction.md)
+
+
+
+
