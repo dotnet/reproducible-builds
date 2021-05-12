@@ -1,6 +1,18 @@
 ﻿# DotNet.ReproducibleBuilds
 
-This repo generates a package that enables reproducible builds in a single step. It's highly recommended that all projects enable these settings, either via
+This repo generates a package that enables reproducible builds in a single step, and documents MSBuild settings useful for enabling reproducibility through isolation.
+
+This repo documents various MSBuild settings for reproducibilty, and providing a nuget package for enabling some of these setting.
+
+## Documentation
+
+See [Documentation/README.md](Documentation/README.md) for documentation on how to configure 
+
+It's highly recommended that most projects enable these settings as described in the above documentation and usage section.
+
+## DotNet.ReproducibleBuilds nuget package
+
+It's highly recommended that all projects enable these settings, either via
 adding this package or manually as described here: https://devblogs.microsoft.com/dotnet/producing-packages-with-source-link/
 
 This package sets the following properties:
@@ -14,7 +26,7 @@ It also adds SourceLink dependencies for all repo types (the right one will be u
 
 For more information on debugging with Source Link is [here](https://devblogs.microsoft.com/dotnet/improving-debug-time-productivity-with-source-link/).
 
-## Usage
+### Usage
 
 Add the following to your `Directory.Build.props` file so all projects in your solution have the package added -- use the latest package version.
 
