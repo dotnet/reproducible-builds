@@ -47,17 +47,24 @@
     <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
   </PropertyGroup>
 
-  <!-- Google Cloud Build
+  <!-- Jenkins
   https://www.jenkins.io/doc/book/pipeline/jenkinsfile/#using-environment-variables
   -->  
   <PropertyGroup Condition="'$(BUILD_ID)' != '' and '$(BUILD_URL)' != '' ">
     <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
   </PropertyGroup>
 
-  <!-- Jenkins
+  <!-- Google Cloud Build
   https://cloud.google.com/build/docs/configuring-builds/substitute-variable-values
   -->
   <PropertyGroup Condition="'$(BUILD_ID)' != '' and '$(PROJECT_ID)' != '' ">
+    <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
+  </PropertyGroup>
+
+  <!-- TeamCity
+  https://www.jetbrains.com/help/teamcity/predefined-build-parameters.html#Server+Build+Properties
+  -->
+  <PropertyGroup Condition="'$(TEAMCITY_VERSION)' != '' ">
     <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
   </PropertyGroup>
 

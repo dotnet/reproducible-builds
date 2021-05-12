@@ -32,7 +32,7 @@ Add the following to your `Directory.Build.props` file so all projects in your s
 
 ```xml
 <ItemGroup>
-  <PackageReference Include="DotNet.ReproducibleBuilds" Version="0.1.26" PrivateAssets="All"/>
+  <PackageReference Include="DotNet.ReproducibleBuilds" Version="0.1.34" PrivateAssets="All"/>
 </ItemGroup>
 ```
 
