@@ -1,0 +1,4 @@
+- [AssemblySearchPaths](./AssemblySearchPaths.md)
+- [DisableImplicitNuGetFallbackFolder](./DisableImplicitNuGetFallbackFolder.md)
+- [NUGET_XMLDOC_MODE](./NUGET_XMLDOC_MODE.md)
+- [TargetFrameworkRootPath](./TargetFrameworkRootPath.md)
