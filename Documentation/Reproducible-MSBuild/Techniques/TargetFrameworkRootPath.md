@@ -23,9 +23,21 @@ In Directory.Build.props
 </Target>
 ```
 
+Alternatively, you may opt to force importing of the Microsoft.NETFramework.ReferenceAssemblies package. However, this should only be performed in repos that are no longer using packages.config
+
+```xml
+<!-- Disable the normal search path mechanism -->
+<PropertyGroup>
+  <TargetFrameworkRootPath Condition="'$(BuildingInsideVisualStudio)'!='true'">[UNDEFINED]</TargetFrameworkRootPath>
+</PropertyGroup>
+<ItemGroup>
+  <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.0" VersionOverride="1.0.0" />
+</Target>
+```
+
 ## Remarks
 
-Not only does GetReferenceAssemblyPaths rely on installed software, there are different versions of these reference assemblies in the different versions of MSBuild / Visual Studio available. This can result in non-repeatable assembly reference errors (e.g. System.Net.Http appears as version 4.0.0.0 in one version of the net462 reference assemblies, but version 4.2.0.0 in another).
+Not only does GetReferenceAssemblyPaths rely on installed software, there are different versions of these reference assemblies in the different versions of MSBuild / Visual Studio available. This can result in non-repeatable assembly reference errors (e.g. System.Net.Http appears as version 4.0.0.0 in one version of the net462 reference assemblies, but version 4.2.0.0 in another). This is thought to have behavioral differences.
 
 Using the nuget package will produce consistent results regardless of installed reference assemblies, as it overrides the path resolved by GetReferenceAssemblyPaths.
 

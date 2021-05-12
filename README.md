@@ -4,9 +4,9 @@ This repo generates a package that enables reproducible builds in a single step,
 
 This repo documents various MSBuild settings for reproducibilty, and providing a nuget package for enabling some of these setting.
 
-## Documentation
+## Build Isolation Documentation
 
-See [Documentation/README.md](Documentation/README.md) for documentation on how to configure 
+See [Reproducible-MSBuild/Techniques/toc.md](Documentation/Reproducible-MSBuild/Techniques/toc.md) for a list of techniques to improve isolation of your builds from the host machine's configuration.
 
 It's highly recommended that most projects enable these settings as described in the above documentation and usage section.
 
