@@ -31,9 +31,11 @@ Alternatively, you may opt to force importing of the Microsoft.NETFramework.Refe
   <TargetFrameworkRootPath Condition="'$(BuildingInsideVisualStudio)'!='true'">[UNDEFINED]</TargetFrameworkRootPath>
 </PropertyGroup>
 <ItemGroup>
-  <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.0" VersionOverride="1.0.0" />
+  <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.0" />
 </Target>
 ```
+
+Note that if Microsoft.Build.CentralPackageVersions is being used, you will need to change `Version=` to `VersionOverride=`, or move the version value into your Packges.props file.
 
 ## Remarks
 
