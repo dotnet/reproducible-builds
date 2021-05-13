@@ -32,6 +32,8 @@
 
   <Target Name="SetBuildVer" DependsOnTargets="GetBuildVersion" BeforeTargets="SetCloudBuildVersionVars;SetCloudBuildNumberWithVersion">
     <PropertyGroup>
+      <!-- Use the simple version instead, overriding default from Nerdbank.GitVersioning -->
+      <PackageVersion>$(BuildVersionSimple)</PackageVersion>
       <RepositoryCommit>$(GitCommitId)</RepositoryCommit>
     </PropertyGroup>
   </Target>
