@@ -5,9 +5,6 @@
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <!-- Don't emit netstandard1.0 as a dependency. We set TargetFramework just to get nuget restore working. -->
     <SuppressDependenciesWhenPacking>true</SuppressDependenciesWhenPacking>
-
-    <!-- Suppress warning that nuget licenseurl field is deprecated. Keep both licenseurl and license for now for parity with DotNet.ReproducibleBuilds package. -->
-    <NoWarn>$(NoWarn);NU5125</NoWarn>
   </PropertyGroup>
  
 
@@ -15,7 +12,6 @@
   <PropertyGroup>
     <Authors>.NET Foundation and Contributors</Authors>
     <DevelopmentDependency>true</DevelopmentDependency>
-    <!-- <PackageLicenseUrl>https://github.com/dotnet/reproducible-builds/blob/main/LICENSE</PackageLicenseUrl> -->
     <PackageProjectUrl>https://github.com/dotnet/reproducible-builds</PackageProjectUrl>
     <Description>Enables reproducible build settings</Description>
     <ReleaseNotes>https://github.com/dotnet/reproducible-builds/blob/main/README.md</ReleaseNotes>
