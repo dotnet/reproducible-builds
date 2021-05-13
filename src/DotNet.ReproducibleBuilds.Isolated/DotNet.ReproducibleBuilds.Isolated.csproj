@@ -13,7 +13,7 @@
     <Authors>.NET Foundation and Contributors</Authors>
     <DevelopmentDependency>true</DevelopmentDependency>
     <PackageProjectUrl>https://github.com/dotnet/reproducible-builds</PackageProjectUrl>
-    <Description>Enables reproducible build settings</Description>
+    <Description>Enables reproducible build settings, isolating build from side effects of other installed software on the same machine.</Description>
     <ReleaseNotes>https://github.com/dotnet/reproducible-builds/blob/main/README.md</ReleaseNotes>
     <Copyright>© .NET Foundation</Copyright>
     <RepositoryType>git</RepositoryType>
