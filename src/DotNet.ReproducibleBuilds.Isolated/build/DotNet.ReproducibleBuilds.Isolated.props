@@ -2,7 +2,7 @@
   <!--
     Isolate the build from unrelated installed software.
 
-    Each of these settings and rationale are detailed in the Documentation that can be found 
+    Each of these settings and rationale are detailed in the Documentation that can be found
     at https://github.com/dotnet/reproducible-builds/blob/main/Documentation/Reproducible-MSBuild/Techniques/toc.md
   -->
 
@@ -20,7 +20,7 @@
 
   <!--
     Disable msbuild's lookup of .NET Framework sdks thru OS registry. Instead, users should
-    add a reference to 
+    add a PackageReference to the Microsoft.NETFramework.ReferenceAssemblies nuget in Directory.Build.props.
   -->
   <PropertyGroup>
     <TargetFrameworkRootPath Condition="'$(BuildingInsideVisualStudio)'!='true'">[UNDEFINED]</TargetFrameworkRootPath>
