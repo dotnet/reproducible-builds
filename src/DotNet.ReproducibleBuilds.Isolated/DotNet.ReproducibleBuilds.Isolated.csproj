@@ -26,7 +26,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Include="Sdk\**" Pack="true" PackagePath="Sdk\" />
+    <None Include="build\**" Pack="true" PackagePath="build\" />
     <None Include="..\..\LICENSE" Pack="true" PackagePath="licenses\" />
   </ItemGroup>
 

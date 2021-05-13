@@ -1,0 +1,51 @@
+<Project>
+  <!--
+    Isolate the build from unrelated installed software.
+
+    Each of these settings and rationale are detailed in the Documentation that can be found 
+    at https://github.com/dotnet/reproducible-builds/blob/main/Documentation/Reproducible-MSBuild/Techniques/toc.md
+  -->
+
+  <!--
+    Restrict the reference assembly search path.
+  -->
+  <PropertyGroup>
+    <AssemblySearchPaths>
+      {CandidateAssemblyFiles};
+      {HintPathFromItem};
+      {TargetFrameworkDirectory};
+      {RawFileName}
+    </AssemblySearchPaths>
+  </PropertyGroup>
+
+  <!--
+    Disable msbuild's lookup of .NET Framework sdks thru OS registry. Instead, users should
+    add a reference to 
+  -->
+  <PropertyGroup>
+    <TargetFrameworkRootPath Condition="'$(BuildingInsideVisualStudio)'!='true'">[UNDEFINED]</TargetFrameworkRootPath>
+  </PropertyGroup>
+  <Target Name="CheckTargetFrameworkRootPath" BeforeTargets="GetReferenceAssemblyPaths" Condition="'$(BuildingInsideVisualStudio)'!='true'">
+    <Message Text="TargetFrameworkRootPath=$(TargetFrameworkRootPath)" />
+    <Message Text="TargetFrameworkIdentifier=$(TargetFrameworkIdentifier)" />
+    <Message Text="TargetFrameworkVersion=$(TargetFrameworkVersion)" />
+    <Warning
+      Condition="'$(TargetFrameworkRootPath)' == '[UNDEFINED]' and '$(TargetFrameworkIdentifier)' == '.NETFramework'"
+      Text="Error, TargetFrameworkRootPath not initialized. If you're building for net462 or any other version of desktop NETFramework, please reference the 'Microsoft.NETFramework.ReferenceAssemblies' nuget package and run restore on the project to fix up your framework reference paths." />
+  </Target>
+
+  <!--
+    Disable msbuild's lookup of dotnetcore, dotnet5+ framework reference assemblies through default install
+    locations. Instead, resolve from nuget feed.
+  -->
+  <PropertyGroup>
+    <NetCoreTargetingPackRoot>[UNDEFINED]</NetCoreTargetingPackRoot>
+  </PropertyGroup>
+
+  <!--
+    Disable the extra implicit nuget package cache provided by dotnetsdk.
+  -->
+  <PropertyGroup>
+    <DisableImplicitNuGetFallbackFolder>true</DisableImplicitNuGetFallbackFolder>
+  </PropertyGroup>
+</Project>
