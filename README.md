@@ -21,7 +21,7 @@ If you check out the same commit with the same SDK version and same nuget feed, 
 Add the following to the top of your projects or to `Directory.Build.props`:
 
 ```xml
-<Sdk Include="DotNet.ReproducibleBuilds.Isolated" Version="{TBD}" />
+<Sdk Name="DotNet.ReproducibleBuilds.Isolated" Version="{TBD}" />
 ```
 
 Note: fill in the appropriate {TBD} version after the first release.
