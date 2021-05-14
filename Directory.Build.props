@@ -1,4 +1,8 @@
 <Project>
+  <PropertyGroup>
+    <!-- Default to not packaging a project. Override per-project where dotnet sdk nuget packaging is desired. -->
+    <IsPackable Condition="'$(IsPackable)' == ''">false</IsPackable>    
+  </PropertyGroup>
   <PropertyGroup Condition="'$(Build_ArtifactStagingDirectory)' != ''">
     <PackageOutputPath>$(Build_ArtifactStagingDirectory)packages\</PackageOutputPath>
   </PropertyGroup>

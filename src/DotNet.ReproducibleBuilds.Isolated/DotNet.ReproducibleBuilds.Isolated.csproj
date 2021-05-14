@@ -2,9 +2,9 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard1.0</TargetFramework>
-    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <!-- Don't emit netstandard1.0 as a dependency. We set TargetFramework just to get nuget restore working. -->
     <SuppressDependenciesWhenPacking>true</SuppressDependenciesWhenPacking>
+    <IsPackable>true</IsPackable>
   </PropertyGroup>
 
   <!-- Nuget properties -->

@@ -5,13 +5,11 @@
 
     <NoPackageAnalysis>true</NoPackageAnalysis>
     <IncludeBuildOutput>false</IncludeBuildOutput>
-    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
     <EnableDefaultEmbeddedResourceItems>false</EnableDefaultEmbeddedResourceItems>
     <GenerateAssemblyVersionInfo>false</GenerateAssemblyVersionInfo>
     <NuspecFile>DotNet.ReproducibleBuilds.nuspec</NuspecFile>
-    <IsPackable>false</IsPackable>
   </PropertyGroup> 
 
   <ItemGroup>
