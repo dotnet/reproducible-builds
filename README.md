@@ -18,13 +18,20 @@ If you check out the same commit with the same SDK version and same nuget feed, 
 
 ### Usage
 
-Add the following to your `Directory.Build.props` file so all projects in your solution have the package added -- use the latest package version.
+Add the following to your `Directory.Build.props` and `Directory.Build.targets` files so all projects in your solution have the package added -- use the latest package version.
+
+Directory.Build.props:
 
 ```xml
-<ItemGroup>
-  <Sdk Include="DotNet.ReproducibleBuilds.Isolated" Version="{TBD}" PrivateAssets="All"/>
-</ItemGroup>
+<Import Project="Sdk.props" Sdk="DotNet.ReproducibleBuilds.Isolated" Version="{TBD}" />
 ```
+
+Directory.Build.targets:
+
+```xml
+<Import Project="Sdk.targets" Sdk="DotNet.ReproducibleBuilds.Isolated" Version="{TBD}" />
+```
+
 
 Note: fill in the appropriate {TBD} version after the first release.
 
