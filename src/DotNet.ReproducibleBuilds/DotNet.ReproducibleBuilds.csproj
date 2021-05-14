@@ -1,5 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
-
+﻿<Project Sdk="Microsoft.Build.NoTargets">
   <PropertyGroup>
     <TargetFramework>netstandard1.0</TargetFramework>
     <DevelopmentDependency>true</DevelopmentDependency>
@@ -12,13 +11,8 @@
     <EnableDefaultEmbeddedResourceItems>false</EnableDefaultEmbeddedResourceItems>
     <GenerateAssemblyVersionInfo>false</GenerateAssemblyVersionInfo>
     <NuspecFile>DotNet.ReproducibleBuilds.nuspec</NuspecFile>
-  </PropertyGroup>
- 
-
-  <ItemGroup>
-    <IntermediateAssembly Remove="@(IntermediateAssembly)"/>
-    <IntermediateRefAssembly Remove="@(IntermediateRefAssembly)"/>
-  </ItemGroup>
+    <IsPackable>false</IsPackable>
+  </PropertyGroup> 
 
   <ItemGroup>
     <PackageReference Include="Nerdbank.GitVersioning" Version="3.4.194" PrivateAssets="all" />
@@ -33,8 +27,17 @@
       <AssemblyVersion>$(BuildVersionSimple)</AssemblyVersion>
 
       <NuspecProperties>version=$(NuGetPackageVersion);RepositoryType=git;RepositoryCommit=$(GitCommitId);RepositoryUrl=$(GitRepositoryUrl)</NuspecProperties>
-
     </PropertyGroup>
+  </Target>
+  
+  <Target Name="CustomPack" BeforeTargets="Pack">
+    <!--
+      Manually package the nuget.
 
+      There's no way to use the pack targets without it putting Exclude=Build,Analyzers, which we don't
+      want. We also explicitly need the dependent reference's build targets to run (for soucelink). That's
+      why we specify the nuspec directly. 
+    -->
+    <Exec Command="nuget pack DotNet.ReproducibleBuilds.nuspec -outputdirectory $(PackageOutputPath) -basepath . -NoPackageAnalysis -Properties &quot;$(NuspecProperties)&quot;" />    
   </Target>
 </Project>

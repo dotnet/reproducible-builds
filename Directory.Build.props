@@ -1,0 +1,5 @@
+<Project>
+  <PropertyGroup Condition="'$(Build_ArtifactStagingDirectory)' != ''">
+    <PackageOutputPath>$(Build_ArtifactStagingDirectory)packages\</PackageOutputPath>
+  </PropertyGroup>
+</Project>

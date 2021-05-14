@@ -30,16 +30,11 @@ stages:
 
     - task: NuGetToolInstaller@1  
 
-    - pwsh: |
-        mkdir $(Build.ArtifactStagingDirectory)\Packages
-        $version = .\nbgv get-version -f json | ConvertFrom-Json        
-        
-        nuget pack  $(System.DefaultWorkingDirectory)\src\DotNet.ReproducibleBuilds\DotNet.ReproducibleBuilds.nuspec `
-                    -outputdirectory $(Build.ArtifactStagingDirectory)\Packages `
-                    -basepath $(System.DefaultWorkingDirectory)\src\DotNet.ReproducibleBuilds `
-                    -NoPackageAnalysis `
-                    -Properties "version=$($version.NuGetPackageVersion);RepositoryCommit=$($version.GitCommitId)" 
-        
+    - task: DotNetCoreCLI@2 
+      inputs:
+        command: custom
+        custom: pack
+        arguments: src/DotNet.ReproducibleBuilds
       displayName: Create package
 
     - publish: $(Build.ArtifactStagingDirectory)\Packages
