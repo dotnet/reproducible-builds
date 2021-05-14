@@ -18,27 +18,20 @@ stages:
       DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
 
     steps:
-    - task: DotNetCoreCLI@2  
+    - task: UseDotNet@2
       inputs:
-        command: custom
-        custom: tool
-        arguments: restore
+        packageType: sdk
+      displayName: 'Use .NET Core sdk'
+
+    - script: dotnet tool restore
       displayName: Install NBGV and other dotnet tools
 
-    - task: DotNetCoreCLI@2  
-      inputs:
-        command: custom
-        custom: nbgv
-        arguments: cloud
+    - script: dotnet nbgv cloud
       displayName: Set Version
 
     - task: NuGetToolInstaller@1  
 
-    - task: DotNetCoreCLI@2 
-      inputs:
-        command: custom
-        custom: pack
-        arguments: src/DotNet.ReproducibleBuilds
+    - script: dotnet pack src/DotNet.ReproducibleBuilds
       displayName: Create package
 
     - publish: $(Build.ArtifactStagingDirectory)\Packages
