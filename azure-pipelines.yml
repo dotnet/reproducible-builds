@@ -31,8 +31,8 @@ stages:
 
     - task: NuGetToolInstaller@1  
 
-    - script: dotnet pack src/DotNet.ReproducibleBuilds
-      displayName: Create package
+    - script: dotnet pack dirs.proj
+      displayName: Create package(s)
 
     - publish: $(Build.ArtifactStagingDirectory)\Packages
       displayName: Publish build packages
