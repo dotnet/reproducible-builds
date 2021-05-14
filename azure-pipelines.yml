@@ -22,10 +22,14 @@ stages:
       inputs:
         command: custom
         custom: tool
-        arguments: install --tool-path . nbgv
-      displayName: Install NBGV tool
+        arguments: restore
+      displayName: Install NBGV and other dotnet tools
 
-    - script: nbgv cloud
+    - task: DotNetCoreCLI@2  
+      inputs:
+        command: custom
+        custom: nbgv
+        arguments: cloud
       displayName: Set Version
 
     - task: NuGetToolInstaller@1  
