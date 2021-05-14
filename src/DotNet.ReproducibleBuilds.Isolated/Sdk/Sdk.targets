@@ -1,0 +1,24 @@
+<Project>
+  <!--
+    Automatically include Microsoft.NETFramework.ReferenceAssemblies package when building net4x projects,
+    to isolate between potentially different versions of reference assemblies installed.
+
+    Note: adding after project expansion ensures that:
+    (a) We're compatible with Microsoft.Build.CentralPackageVersions, which will err out if Version is provided
+    (b) We honor the version that the user provided, if they've already imported the reference assemblies.
+  -->
+  <Target
+    Name="_EnsureNETFrameworkReferenceAssembliesProvided"
+    AfterTargets="CheckPackageReferences"
+    BeforeTargets="CollectPackageReferences"
+    Condition="
+      $(TargetFramework.Contains('net4'))
+      and
+      '@(PackageReference->AnyHaveMetadataValue('Identity', 'Microsoft.NETFramework.ReferenceAssemblies'))' != 'True'
+      and
+      '$(EnsureNETFrameworkReferenceAssembliesProvided)' != 'false'">
+    <ItemGroup>
+      <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.2" />
+    </ItemGroup>
+  </Target>
+</Project>

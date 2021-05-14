@@ -6,14 +6,13 @@
     <!-- Don't emit netstandard1.0 as a dependency. We set TargetFramework just to get nuget restore working. -->
     <SuppressDependenciesWhenPacking>true</SuppressDependenciesWhenPacking>
   </PropertyGroup>
- 
 
   <!-- Nuget properties -->
   <PropertyGroup>
     <Authors>.NET Foundation and Contributors</Authors>
     <DevelopmentDependency>true</DevelopmentDependency>
     <PackageProjectUrl>https://github.com/dotnet/reproducible-builds</PackageProjectUrl>
-    <Description>Enables reproducible build settings, isolating build from side effects of other installed software on the same machine.</Description>
+    <Description>Enables reproducible build settings, isolating build from side effects of other installed software on the samemachine.</Description>
     <ReleaseNotes>https://github.com/dotnet/reproducible-builds/blob/main/README.md</ReleaseNotes>
     <Copyright>© .NET Foundation</Copyright>
     <RepositoryType>git</RepositoryType>
@@ -22,7 +21,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Include="build\**" Pack="true" PackagePath="build\" />
+    <!--
+      Use of Sdk pattern enables this package to automatically pull in the framework reference libraries
+      nuget package.
+    -->
+    <None Include="Sdk\**" Pack="true" PackagePath="Sdk\" />
     <None Include="..\..\LICENSE" Pack="true" PackagePath="licenses\" />
   </ItemGroup>
 
@@ -34,6 +37,7 @@
     <PropertyGroup>
       <!-- Use the simple version instead, overriding default from Nerdbank.GitVersioning -->
       <PackageVersion>$(BuildVersionSimple)</PackageVersion>
+      <PackageVersion Condition="'$(VersionSuffix)' != ''">$(PackageVersion)-$(VersionSuffix)</PackageVersion>
       <RepositoryCommit>$(GitCommitId)</RepositoryCommit>
     </PropertyGroup>
   </Target>
