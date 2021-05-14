@@ -4,11 +4,31 @@ This repo generates a package that enables reproducible builds in a single step,
 
 This repo documents various MSBuild settings for reproducibilty, and providing a nuget package for enabling some of these setting.
 
-## Build Isolation Documentation
 
-See [Reproducible-MSBuild/Techniques/toc.md](Documentation/Reproducible-MSBuild/Techniques/toc.md) for a list of techniques to improve isolation of your builds from the host machine's configuration.
+## DotNet.ReproducibleBuilds.Isolation Documentation and nuget package
 
-It's highly recommended that most projects enable these settings as described in the above documentation and usage section.
+It's highly recommended that all projects enable these settings, either via 
+adding this package or manually, as described in [Documentation/Reproducible-MSBuild](Documentation/Reproducible-MSBuild/README.md).
+
+This package configures a variety of properties and item groups to prevent your build from unintentionally 
+depending on other installed software that's not described by your repo. All build dependencies should come
+from either the MSBuild SDK you've chosen, or from nuget packages restored from your package feed. 
+
+If you check out the same commit with the same SDK version and same nuget feed, you should get the same build result.
+
+### Usage
+
+Add the following to your `Directory.Build.props` file so all projects in your solution have the package added -- use the latest package version.
+
+```xml
+<ItemGroup>
+  <Sdk Include="DotNet.ReproducibleBuilds.Isolated" Version="{TBD}" PrivateAssets="All"/>
+</ItemGroup>
+```
+
+Note: fill in the appropriate {TBD} version after the first release.
+
+Tested on MSBuild 16.7 (Latest LTS at time of writing).
 
 ## DotNet.ReproducibleBuilds nuget package
 
