@@ -1,0 +1,10 @@
+<Project>
+  <PropertyGroup>
+    <!-- Default to not packaging a project. Override per-project where dotnet sdk nuget packaging is desired. -->
+    <IsPackable Condition="'$(IsPackable)' == ''">false</IsPackable>    
+
+    <!-- set up package output path -->
+    <PackageOutputPath Condition="'$(Build_ArtifactStagingDirectory)' != ''">$(Build_ArtifactStagingDirectory)\packages\</PackageOutputPath>
+    <PackageOutputPath Condition="'$(PackageOutputPath)' == ''">$(MSBuildThisFileDirectory)packages\</PackageOutputPath>
+  </PropertyGroup>
+</Project>
