@@ -5,7 +5,7 @@ This repo generates a package that enables reproducible builds in a single step,
 This repo documents various MSBuild settings for reproducibilty, and providing a nuget package for enabling some of these setting.
 
 
-## DotNet.ReproducibleBuilds.Isolation Documentation and nuget package
+## DotNet.ReproducibleBuilds.Isolated Documentation and nuget package
 
 It's highly recommended that all projects enable these settings, either via 
 adding this package or manually, as described in [Documentation/Reproducible-MSBuild](Documentation/Reproducible-MSBuild/README.md).
