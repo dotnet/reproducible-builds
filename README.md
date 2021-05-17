@@ -2,31 +2,13 @@
 
 This repo generates a package that enables reproducible builds in a single step, and documents MSBuild settings useful for enabling reproducibility through isolation.
 
-This repo documents various MSBuild settings for reproducibilty, and providing a nuget package for enabling some of these setting.
+This repo documents various MSBuild settings for reproducibilty, and providing two nuget packages for enabling some of these setting.
 
+The packages are:
 
-## DotNet.ReproducibleBuilds.Isolated Documentation and nuget package
+- DotNet.ReproducibleBuilds
+- DotNet.ReproducibleBuilds.Isolated
 
-It's highly recommended that all projects enable these settings, either via 
-adding this package or manually, as described in [Documentation/Reproducible-MSBuild](Documentation/Reproducible-MSBuild/README.md).
-
-This package configures a variety of properties and item groups to prevent your build from unintentionally 
-depending on other installed software that's not described by your repo. All build dependencies should come
-from either the MSBuild SDK you've chosen, or from nuget packages restored from your package feed. 
-
-If you check out the same commit with the same SDK version and same nuget feed, you should get the same build result.
-
-### Usage
-
-Add the following to the top of your projects or to `Directory.Build.props`:
-
-```xml
-<Sdk Name="DotNet.ReproducibleBuilds.Isolated" Version="{TBD}" />
-```
-
-Note: fill in the appropriate {TBD} version after the first release.
-
-Tested on MSBuild 16.7 (Latest LTS at time of writing).
 
 ## DotNet.ReproducibleBuilds nuget package
 
@@ -59,6 +41,29 @@ if you're using a lower version.
 
 Prerelease packages are available on the following [NuGet feed](https://dev.azure.com/dotnet/Projects/_packaging?_a=feed&feed=ReproducibleBuilds):
 `https://pkgs.dev.azure.com/dotnet/Projects/_packaging/ReproducibleBuilds/nuget/v3/index.json`
+
+## DotNet.ReproducibleBuilds.Isolated Documentation and nuget package
+
+It's highly recommended that all projects enable these settings, either via 
+adding this package or manually, as described in [Documentation/Reproducible-MSBuild](Documentation/Reproducible-MSBuild/README.md).
+
+This package configures a variety of properties and item groups to prevent your build from unintentionally 
+depending on other installed software that's not described by your repo. All build dependencies should come
+from either the MSBuild SDK you've chosen, or from nuget packages restored from your package feed. 
+
+If you check out the same commit with the same SDK version and same nuget feed, you should get the same build result.
+
+### Usage
+
+Add the following to the top of your projects or to `Directory.Build.props`:
+
+```xml
+<Sdk Name="DotNet.ReproducibleBuilds.Isolated" Version="{TBD}" />
+```
+
+Note: fill in the appropriate {TBD} version after the first release.
+
+Tested on MSBuild 16.7 (Latest LTS at time of writing).
 
 ## Contributing
 
