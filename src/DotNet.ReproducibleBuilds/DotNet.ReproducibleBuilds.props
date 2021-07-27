@@ -68,4 +68,11 @@
     <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
   </PropertyGroup>
 
+  <!-- JetBrains Space
+  https://www.jetbrains.com/help/space/automation-environment-variables.html#general
+  -->
+  <PropertyGroup Condition="'$(JB_SPACE_API_URL)' != '' ">
+    <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
+  </PropertyGroup>
+
 </Project>
