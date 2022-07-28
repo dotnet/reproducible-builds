@@ -21,8 +21,10 @@
   </metadata>
   <files>
     <file src="DotNet.ReproducibleBuilds.props" target="build\DotNet.ReproducibleBuilds.props" />
-    <file src="DotNet.ReproducibleBuilds.props" target="buildMultiTargeting\DotNet.ReproducibleBuilds.props" />
+    <file src="DotNet.ReproducibleBuilds.shim.props" target="buildMultiTargeting\DotNet.ReproducibleBuilds.props" />
+    <file src="DotNet.ReproducibleBuilds.shim.props" target="buildTransitive\DotNet.ReproducibleBuilds.props" />
     <file src="DotNet.ReproducibleBuilds.targets" target="build\DotNet.ReproducibleBuilds.targets" />
-    <file src="DotNet.ReproducibleBuilds.targets" target="buildMultiTargeting\DotNet.ReproducibleBuilds.targets" />
+    <file src="DotNet.ReproducibleBuilds.shim.targets" target="buildMultiTargeting\DotNet.ReproducibleBuilds.targets" />
+    <file src="DotNet.ReproducibleBuilds.shim.targets" target="buildTransitive\DotNet.ReproducibleBuilds.targets" />
   </files>
 </package>
