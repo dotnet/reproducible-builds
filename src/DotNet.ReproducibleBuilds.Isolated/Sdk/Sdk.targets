@@ -17,8 +17,20 @@
       '@(PackageReference->AnyHaveMetadataValue('Identity', 'Microsoft.NETFramework.ReferenceAssemblies'))' != 'True'
       and
       '$(EnsureNETFrameworkReferenceAssembliesProvided)' != 'false'">
+    <PropertyGroup>
+      <NETFrameworkReferenceAssembliesVersion>1.0.2</NETFrameworkReferenceAssembliesVersion>
+    </PropertyGroup>
+    <PropertyGroup>
+      <CentralPackageVersionManagementEnabled>false</CentralPackageVersionManagementEnabled>
+      <CentralPackageVersionManagementEnabled Condition="'$(CentralPackageVersionsFileImported)' == 'true' AND '$(ManagePackageVersionsCentrally)' == 'true'">true</CentralPackageVersionManagementEnabled>
+    </PropertyGroup>
     <ItemGroup>
-      <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.2" />
+      <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies">
+        <Version Condition="'$(CentralPackageVersionManagementEnabled)' == 'false'">$(NETFrameworkReferenceAssembliesVersion)</Version>
+      </PackageReference>
+    </ItemGroup>
+    <ItemGroup Condition="'$(CentralPackageVersionManagementEnabled)' == 'true'">
+      <PackageVersion Include="Microsoft.NETFramework.ReferenceAssemblies" Version="$(NETFrameworkReferenceAssembliesVersion)"/>
     </ItemGroup>
   </Target>
 </Project>
