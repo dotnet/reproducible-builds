@@ -43,9 +43,10 @@
   </PropertyGroup>
 
   <!--
-    Disable the extra implicit nuget package cache provided by dotnetsdk.
+    Disable the extra implicit nuget package caches provided by dotnetsdk.
   -->
   <PropertyGroup>
     <DisableImplicitNuGetFallbackFolder>true</DisableImplicitNuGetFallbackFolder>
+    <DisableImplicitLibraryPacksFolder>true</DisableImplicitLibraryPacksFolder>
   </PropertyGroup>
 </Project>
