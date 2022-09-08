@@ -58,10 +58,8 @@ If you check out the same commit with the same SDK version and same nuget feed, 
 Add the following to the top of your projects or to `Directory.Build.props`:
 
 ```xml
-<Sdk Name="DotNet.ReproducibleBuilds.Isolated" Version="{TBD}" />
+<Sdk Name="DotNet.ReproducibleBuilds.Isolated" Version="1.1.1" />
 ```
-
-Note: fill in the appropriate {TBD} version after the first release.
 
 Tested on MSBuild 16.7 (Latest LTS at time of writing).
 
