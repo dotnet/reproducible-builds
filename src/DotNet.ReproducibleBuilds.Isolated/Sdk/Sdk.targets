@@ -18,7 +18,7 @@
       and
       '$(EnsureNETFrameworkReferenceAssembliesProvided)' != 'false'">
     <PropertyGroup>
-      <NETFrameworkReferenceAssembliesVersion>1.0.2</NETFrameworkReferenceAssembliesVersion>
+      <NETFrameworkReferenceAssembliesVersion>1.0.3</NETFrameworkReferenceAssembliesVersion>
 
       <CentralPackageVersionManagementEnabled>false</CentralPackageVersionManagementEnabled>
       <CentralPackageVersionManagementEnabled Condition="'$(CentralPackageVersionsFileImported)' == 'true' AND '$(ManagePackageVersionsCentrally)' == 'true'">true</CentralPackageVersionManagementEnabled>
