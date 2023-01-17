@@ -12,37 +12,50 @@
   
   <!-- Enable ContinuousIntegrationBuild when running on CI -->
 
+  <!--
+    Covers all of the following:
+      - Azure Pipelines / DevOpsServer
+      - GitHub Actions
+      - AppVeyor
+      - Travis CI
+      - Circle CI
+      - AWS CodeBuild
+      - Jenkins (https://www.jenkins.io/doc/book/pipeline/jenkinsfile/#using-environment-variables)
+      - Google Cloud Build (https://cloud.google.com/build/docs/configuring-builds/substitute-variable-values)
+      - TeamCity (https://www.jetbrains.com/help/teamcity/predefined-build-parameters.html#Server+Build+Properties)
+      - JetBrains Space (https://www.jetbrains.com/help/space/automation-environment-variables.html#general)
+      - All CI specific builds when the CI variable is set.
+  -->
   <PropertyGroup>
-    <!-- Azure Pipelines / DevOpsServer -->
-    <ContinuousIntegrationBuild Condition="'$(TF_BUILD)' == 'true'">true</ContinuousIntegrationBuild>
-    <!-- GitHub Actions -->
-    <ContinuousIntegrationBuild Condition="'$(GITHUB_ACTIONS)' == 'true'">true</ContinuousIntegrationBuild>
-    <!-- AppVeyor -->
-    <ContinuousIntegrationBuild Condition="'$(APPVEYOR)' == 'true'">true</ContinuousIntegrationBuild>
-    <!-- Set by many build agents -->
     <ContinuousIntegrationBuild Condition="'$(CI)' == 'true'">true</ContinuousIntegrationBuild>
+    <!-- Azure Pipelines / DevOpsServer -->
+    <ContinuousIntegrationBuild Condition="'$(TF_BUILD)' == 'true' AND '$(ContinuousIntegrationBuild)' != 'true'">true</ContinuousIntegrationBuild>
+    <!-- GitHub Actions -->
+    <ContinuousIntegrationBuild Condition="'$(GITHUB_ACTIONS)' == 'true' AND '$(ContinuousIntegrationBuild)' != 'true'">true</ContinuousIntegrationBuild>
+    <!-- AppVeyor -->
+    <ContinuousIntegrationBuild Condition="'$(APPVEYOR)' == 'true' AND '$(ContinuousIntegrationBuild)' != 'true'">true</ContinuousIntegrationBuild>
     <!-- Travis CI -->
-    <ContinuousIntegrationBuild Condition="'$(TRAVIS)' == 'true'">true</ContinuousIntegrationBuild>
+    <ContinuousIntegrationBuild Condition="'$(TRAVIS)' == 'true' AND '$(ContinuousIntegrationBuild)' != 'true'">true</ContinuousIntegrationBuild>
     <!-- Circle CI -->
-    <ContinuousIntegrationBuild Condition="'$(CIRCLECI)' == 'true'">true</ContinuousIntegrationBuild>
+    <ContinuousIntegrationBuild Condition="'$(CIRCLECI)' == 'true' AND '$(ContinuousIntegrationBuild)' != 'true'">true</ContinuousIntegrationBuild>
     <!-- AWS CodeBuild -->
-    <ContinuousIntegrationBuild Condition="'$(CODEBUILD_BUILD_ID)' != '' and '$(AWS_REGION)' != '' ">true</ContinuousIntegrationBuild>
+    <ContinuousIntegrationBuild Condition="'$(CODEBUILD_BUILD_ID)' != '' AND '$(AWS_REGION)' != '' AND '$(ContinuousIntegrationBuild)' != 'true'">true</ContinuousIntegrationBuild>
     <!-- Jenkins
     https://www.jenkins.io/doc/book/pipeline/jenkinsfile/#using-environment-variables
     -->
-    <ContinuousIntegrationBuild Condition="'$(BUILD_ID)' != '' and '$(BUILD_URL)' != '' ">true</ContinuousIntegrationBuild>
+    <ContinuousIntegrationBuild Condition="'$(BUILD_ID)' != '' AND '$(BUILD_URL)' != '' AND '$(ContinuousIntegrationBuild)' != 'true'">true</ContinuousIntegrationBuild>
     <!-- Google Cloud Build
     https://cloud.google.com/build/docs/configuring-builds/substitute-variable-values
     -->
-    <ContinuousIntegrationBuild Condition="'$(BUILD_ID)' != '' and '$(PROJECT_ID)' != '' ">true</ContinuousIntegrationBuild>
+    <ContinuousIntegrationBuild Condition="'$(BUILD_ID)' != '' AND '$(PROJECT_ID)' != '' AND '$(ContinuousIntegrationBuild)' != 'true'">true</ContinuousIntegrationBuild>
     <!-- TeamCity
     https://www.jetbrains.com/help/teamcity/predefined-build-parameters.html#Server+Build+Properties
     -->
-    <ContinuousIntegrationBuild Condition="'$(TEAMCITY_VERSION)' != '' ">true</ContinuousIntegrationBuild>
+    <ContinuousIntegrationBuild Condition="'$(TEAMCITY_VERSION)' != '' AND '$(ContinuousIntegrationBuild)' != 'true'">true</ContinuousIntegrationBuild>
     <!-- JetBrains Space
     https://www.jetbrains.com/help/space/automation-environment-variables.html#general
     -->
-    <ContinuousIntegrationBuild Condition="'$(JB_SPACE_API_URL)' != '' ">true</ContinuousIntegrationBuild>
+    <ContinuousIntegrationBuild Condition="'$(JB_SPACE_API_URL)' != '' AND '$(ContinuousIntegrationBuild)' != 'true'">true</ContinuousIntegrationBuild>
   </PropertyGroup>
 
 </Project>
