@@ -74,7 +74,7 @@ stages:
               --name "DotNet.ReproducibleBuilds" `
               --description "DotNet.ReproducibleBuilds" `
               --descriptionUrl "https://github.com/dotnet/reproducible-builds"
-            displayName: Sign package
+            displayName: Sign packages
               
           - publish: $(Pipeline.Workspace)/BuildPackages
             displayName: Publish Signed Packages
