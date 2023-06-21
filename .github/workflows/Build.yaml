@@ -1,0 +1,32 @@
+on:
+  push:
+    branches:
+      - main
+      - rel/*
+      - dev/*
+  pull_request:
+    branches:
+      - main
+      - rel/*
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    env:
+      BuildConfiguration: Release
+      DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: actions/setup-dotnet@v3
+
+      - run: dotnet tool restore
+
+      - run: dotnet nbgv cloud
+
+      - uses: nuget/setup-nuget@v1
+
+      - run: dotnet pack dirs.proj
+
