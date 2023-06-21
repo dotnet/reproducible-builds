@@ -19,12 +19,15 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
 
       - uses: actions/setup-dotnet@v3
 
       - run: dotnet tool restore
 
       - run: dotnet nbgv cloud
+        if: false
 
       - uses: nuget/setup-nuget@v1
 
