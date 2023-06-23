@@ -3,7 +3,6 @@ on:
     branches:
       - main
       - rel/*
-      - dev/*
   pull_request:
     branches:
       - main
@@ -27,7 +26,6 @@ jobs:
       - run: dotnet tool restore
 
       - run: dotnet nbgv cloud
-        if: false
 
       - uses: nuget/setup-nuget@v1
 
@@ -45,4 +43,3 @@ jobs:
           dotnet nuget push
           --source github
           packages\*.nupkg
-        
