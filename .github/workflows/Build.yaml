@@ -33,3 +33,16 @@ jobs:
 
       - run: dotnet pack dirs.proj
 
+      - run: >-
+          dotnet nuget add source
+          --username aetos382
+          --password ${{ secrets.GITHUB_TOKEN }}
+          --store-password-in-clear-text
+          --name github
+          "https://nuget.pkg.github.com/aetos382/index.json"
+
+      - run: >-
+          dotnet nuget push
+          --source github
+          packages\*.nupkg
+        
