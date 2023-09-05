@@ -24,7 +24,7 @@
       <CentralPackageVersionManagementEnabled Condition="'$(CentralPackageVersionsFileImported)' == 'true' AND '$(ManagePackageVersionsCentrally)' == 'true'">true</CentralPackageVersionManagementEnabled>
     </PropertyGroup>
     <ItemGroup>
-      <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies">
+      <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" PrivateAssets="All">
         <Version Condition="'$(CentralPackageVersionManagementEnabled)' == 'false'">$(NETFrameworkReferenceAssembliesVersion)</Version>
       </PackageReference>
     </ItemGroup>
