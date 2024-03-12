@@ -6,5 +6,6 @@
     <!-- set up package output path -->
     <PackageOutputPath Condition="'$(Build_ArtifactStagingDirectory)' != ''">$(Build_ArtifactStagingDirectory)\packages\</PackageOutputPath>
     <PackageOutputPath Condition="'$(PackageOutputPath)' == ''">$(MSBuildThisFileDirectory)packages\</PackageOutputPath>
+    <SourceLinkPackageVersion>8.0.0</SourceLinkPackageVersion>
   </PropertyGroup>
 </Project>
