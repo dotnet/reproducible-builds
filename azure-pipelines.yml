@@ -29,8 +29,6 @@ stages:
     - script: dotnet nbgv cloud
       displayName: Set Version
 
-    - task: NuGetToolInstaller@1  
-
     - script: dotnet pack dirs.proj
       displayName: Create package(s)
 
