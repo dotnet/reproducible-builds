@@ -33,4 +33,15 @@
         Version="$(NerdbankPackageVersion)"
         PrivateAssets="all" />
   </ItemGroup>
+
+  <Target
+      Name="PreparePackageReleaseNotesFromFiles"
+      BeforeTargets="GenerateNuspec">
+    <PropertyGroup>
+      <!-- This path will be relative to each executing project -->
+      <PackageReleaseNotesFile>CHANGELOG.md</PackageReleaseNotesFile>
+      <PackageReleaseNotes>$([System.IO.File]::ReadAllText($(PackageReleaseNotesFile)))</PackageReleaseNotes>
+    </PropertyGroup>
+  </Target>
+
 </Project>
