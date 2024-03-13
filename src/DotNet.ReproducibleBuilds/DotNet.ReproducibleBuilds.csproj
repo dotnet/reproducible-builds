@@ -33,8 +33,7 @@
     <PropertyGroup>
       <CloudBuildNumber>$(BuildVersion)</CloudBuildNumber>
       <Version>$(BuildVersion)</Version>
-      <PackageVersion>$(BuildVersion)</PackageVersion>
-      <NuGetPackageVersion>$(BuildVersionSimple)</NuGetPackageVersion>
+      <PackageVersion>$(BuildVersionSimple)</PackageVersion>
       <AssemblyVersion>$(BuildVersionSimple)</AssemblyVersion>
     </PropertyGroup>
   </Target>
