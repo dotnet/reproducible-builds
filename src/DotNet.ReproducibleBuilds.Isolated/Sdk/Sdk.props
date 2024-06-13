@@ -7,7 +7,8 @@
   -->
 
   <!--
-    Restrict the reference assembly search path.
+    Restrict the reference assembly search path to avoid machine-specific dependencies. See
+    https://github.com/dotnet/msbuild/blob/3deec2fe6b7cdc7c3f2458d23d5451893872c031/documentation/wiki/ResolveAssemblyReference.md?plain=1#L148
   -->
   <PropertyGroup>
     <AssemblySearchPaths>
