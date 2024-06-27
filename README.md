@@ -2,8 +2,6 @@
 
 [![.NET Foundation](https://img.shields.io/badge/.NET%20Foundation-blueviolet.svg)](https://www.dotnetfoundation.org/)
 [![Build Status](https://dev.azure.com/dotnet/Projects/_apis/build/status%2FReproducibleBuilds%20-%20CI?branchName=main)](https://dev.azure.com/dotnet/Projects/_build/latest?definitionId=154&branchName=main)
-![NuGet Version](https://img.shields.io/nuget/v/DotNet.ReproducibleBuilds?style=flat&label=DotNet.ReproducibleBuilds)
-![NuGet Version](https://img.shields.io/nuget/v/DotNet.ReproducibleBuilds.Isolated?style=flat&label=DotNet.ReproducibleBuilds.Isolated)
 
 This repo is a collection of best practices for build reproducibility with MSBuild.
 
@@ -11,6 +9,9 @@ It provides documentation and NuGet packages to simplify build configuration and
 workstation-specific settings.
 
 ## DotNet.ReproducibleBuilds nuget package
+
+[![NuGet Version](https://img.shields.io/nuget/v/DotNet.ReproducibleBuilds?style=flat&label=DotNet.ReproducibleBuilds)](https://www.nuget.org/packages/DotNet.ReproducibleBuilds)
+[![NuGet Downloads](https://img.shields.io/nuget/dt/DotNet.ReproducibleBuilds?style=flat)](https://www.nuget.org/packages/DotNet.ReproducibleBuilds)
 
 It's highly recommended that all projects enable these settings, either via
 adding this package or manually as described here: https://devblogs.microsoft.com/dotnet/producing-packages-with-source-link/
@@ -43,6 +44,9 @@ Prerelease packages are available on the following [NuGet feed](https://dev.azur
 `https://pkgs.dev.azure.com/dotnet/Projects/_packaging/ReproducibleBuilds/nuget/v3/index.json`
 
 ## DotNet.ReproducibleBuilds.Isolated Documentation and nuget package
+
+[![NuGet Version](https://img.shields.io/nuget/v/DotNet.ReproducibleBuilds.Isolated?style=flat&label=DotNet.ReproducibleBuilds.Isolated)](https://www.nuget.org/packages/DotNet.ReproducibleBuilds.Isolated)
+[![NuGet Downloads](https://img.shields.io/nuget/dt/DotNet.ReproducibleBuilds.Isolated?style=flat)](https://www.nuget.org/packages/DotNet.ReproducibleBuilds.Isolated)
 
 It's highly recommended that all projects enable these settings, either via 
 adding this package or manually, as described in [Documentation/Reproducible-MSBuild](Documentation/Reproducible-MSBuild/README.md).
