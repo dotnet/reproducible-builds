@@ -1,5 +1,10 @@
 ﻿# DotNet.ReproducibleBuilds
 
+[![.NET Foundation](https://img.shields.io/badge/.NET%20Foundation-blueviolet.svg)](https://www.dotnetfoundation.org/)
+[![Build Status](https://dev.azure.com/dotnet/Projects/_apis/build/status%2FReproducibleBuilds%20-%20CI?branchName=main)](https://dev.azure.com/dotnet/Projects/_build/latest?definitionId=154&branchName=main)
+![NuGet Version](https://img.shields.io/nuget/v/DotNet.ReproducibleBuilds?style=flat&label=DotNet.ReproducibleBuilds)
+![NuGet Version](https://img.shields.io/nuget/v/DotNet.ReproducibleBuilds.Isolated?style=flat&label=DotNet.ReproducibleBuilds.Isolated)
+
 This repo generates a package that enables reproducible builds in a single step, and documents MSBuild settings useful for enabling reproducibility through isolation.
 
 This repo documents various MSBuild settings for reproducibilty, and providing two nuget packages for enabling some of these setting.
