@@ -6,7 +6,15 @@
       "version": "3.4.194",
       "commands": [
         "nbgv"
-      ]
+      ],
+      "rollForward": false
+    },
+    "sign": {
+      "version": "0.9.1-beta.24325.5",
+      "commands": [
+        "sign"
+      ],
+      "rollForward": false
     }
   }
 }
