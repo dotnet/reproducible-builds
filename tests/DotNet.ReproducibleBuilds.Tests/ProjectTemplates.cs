@@ -6,15 +6,21 @@ internal static class ProjectTemplates
 {
     private static readonly string ThisAssemblyDirectory = Path.GetDirectoryName(typeof(ProjectTemplates).Assembly.Location)!;
 
-    public static ProjectCreator ReproducibleBuildProject(this ProjectCreatorTemplates templates, string directory, Action<ProjectCreator> configure)
+    public static ProjectCreator ReproducibleBuildProject(this ProjectCreatorTemplates templates, DirectoryInfo path)
     {
-        ProjectCreator template = ProjectCreator.Templates
-            .SdkCsproj(path: Path.Combine(directory, "test.csproj"), targetFramework: "net8.0")
-            .Import(Path.Combine(ThisAssemblyDirectory, "DotNet.ReproducibleBuilds.props"));
+        FileInfo project = new(path.Combine("test.csproj"));
 
-        configure(template);
+        _ = ProjectCreator
+            .Create(path: path.Combine("obj", $"{project.Name}.tests.g.props"))
+            .Import(Path.Combine(ThisAssemblyDirectory, "DotNet.ReproducibleBuilds.props"))
+            .Save();
 
-        return template
-            .Import(Path.Combine(ThisAssemblyDirectory, "DotNet.ReproducibleBuilds.targets"));
+        _ = ProjectCreator
+            .Create(path: path.Combine("obj", $"{project.Name}.tests.g.targets"))
+            .Import(Path.Combine(ThisAssemblyDirectory, "DotNet.ReproducibleBuilds.targets"))
+            .Save();
+
+        return templates
+            .SdkCsproj(path: project.FullName, targetFramework: "net8.0");
     }
 }

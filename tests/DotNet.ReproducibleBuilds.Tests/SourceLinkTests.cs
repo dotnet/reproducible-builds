@@ -11,13 +11,27 @@ public class SourceLinkTests : TestBase
     [InlineData(true, true)]
     public void PublishRepositoryUrlIsSet(bool? publishRepositoryUrl, bool expected)
     {
-        ProjectCreator.Templates.ReproducibleBuildProject(TestRootPath, project =>
-        {
-            project
-                .PropertyGroup()
-                .Property("PublishRepositoryUrl", publishRepositoryUrl.ToLowerInvariant());
-        }).Project
+        ProjectCreator.Templates
+            .ReproducibleBuildProject(TestRootPath)
+            .PropertyGroup()
+                .Property("PublishRepositoryUrl", publishRepositoryUrl.ToLowerInvariant())
+            .Project
             .GetPropertyValue("PublishRepositoryUrl")
             .Should().Be(expected.ToLowerInvariant());
+    }
+
+    [Theory]
+    [InlineData(null, "embedded")]
+    [InlineData("embedded", "embedded")]
+    [InlineData("portable", "portable")]
+    public void DebugTypeIsSet(string? debugType, string expected)
+    {
+        ProjectCreator.Templates
+            .ReproducibleBuildProject(TestRootPath)
+            .PropertyGroup()
+                .Property("DebugType", debugType)
+            .Project
+            .GetPropertyValue("DebugType")
+            .Should().Be(expected);
     }
 }
