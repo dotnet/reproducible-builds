@@ -34,4 +34,19 @@ public class SourceLinkTests : TestBase
             .GetPropertyValue("DebugType")
             .Should().Be(expected);
     }
+
+    [Theory]
+    [InlineData(null, true)]
+    [InlineData(false, false)]
+    [InlineData(true, true)]
+    public void EmbedUntrackedSourcesIsSet(bool? embedUntrackedSources, bool expected)
+    {
+        ProjectCreator.Templates
+            .ReproducibleBuildProject(TestRootPath)
+            .PropertyGroup()
+                .Property("PublishRepositoryUrl", embedUntrackedSources.ToLowerInvariant())
+            .Project
+            .GetPropertyValue("PublishRepositoryUrl")
+            .Should().Be(expected.ToLowerInvariant());
+    }
 }
