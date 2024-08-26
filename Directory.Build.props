@@ -1,5 +1,7 @@
 <Project>
   <PropertyGroup>
+    <RepoRoot>$(MSBuildThisFileDirectory)</RepoRoot>
+
     <!-- Default to not packaging a project. Override per-project where dotnet sdk nuget packaging
     is desired. -->
     <IsPackable Condition="'$(IsPackable)' == ''">false</IsPackable>
@@ -36,6 +38,7 @@
 
   <Target
       Name="PreparePackageReleaseNotesFromFiles"
+      Condition="'$(IsPackable)' == 'true'"
       BeforeTargets="GenerateNuspec">
     <PropertyGroup>
       <!-- This path will be relative to each executing project -->
