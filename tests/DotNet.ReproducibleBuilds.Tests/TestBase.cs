@@ -30,4 +30,9 @@ public abstract class TestBase : IDisposable
             }
         }
     }
+
+    protected FileInfo GetRandomFile(string? extension = null)
+    {
+        return new(TestRootPath.Combine($"{Path.GetRandomFileName()}{extension ?? string.Empty}"));
+    }
 }

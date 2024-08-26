@@ -6,17 +6,17 @@ internal static class ProjectTemplates
 {
     private static readonly string ThisAssemblyDirectory = Path.GetDirectoryName(typeof(ProjectTemplates).Assembly.Location)!;
 
-    public static ProjectCreator ReproducibleBuildProject(this ProjectCreatorTemplates templates, DirectoryInfo path)
+    public static ProjectCreator ReproducibleBuildProject(this ProjectCreatorTemplates templates, FileInfo project)
     {
-        FileInfo project = new(path.Combine("test.csproj"));
+        DirectoryInfo directory = project.Directory ?? throw new ArgumentException("Project's path does not appear to have a parent.", nameof(project));
 
         _ = ProjectCreator
-            .Create(path: path.Combine("obj", $"{project.Name}.tests.g.props"))
+            .Create(path: directory.Combine("obj", $"{project.Name}.tests.g.props"))
             .Import(Path.Combine(ThisAssemblyDirectory, "DotNet.ReproducibleBuilds.props"))
             .Save();
 
         _ = ProjectCreator
-            .Create(path: path.Combine("obj", $"{project.Name}.tests.g.targets"))
+            .Create(path: directory.Combine("obj", $"{project.Name}.tests.g.targets"))
             .Import(Path.Combine(ThisAssemblyDirectory, "DotNet.ReproducibleBuilds.targets"))
             .Save();
 
