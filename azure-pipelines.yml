@@ -30,6 +30,9 @@ stages:
     - script: dotnet nbgv cloud
       displayName: Set Version
 
+    - script: dotnet test dirs.proj
+      displayName: Test
+
     - script: dotnet pack dirs.proj
       displayName: Create package(s)
 
