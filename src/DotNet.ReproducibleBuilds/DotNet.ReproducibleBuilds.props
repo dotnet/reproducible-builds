@@ -12,17 +12,23 @@
   
   <!-- Enable ContinuousIntegrationBuild when running on CI -->
 
-  <!-- Azure Pipelines / DevOpsServer -->
+  <!-- Azure Pipelines / DevOpsServer
+  https://learn.microsoft.com/en-us/azure/devops/pipelines/build/variables?view=azure-devops&tabs=yaml#system-variables-devops-services
+  -->
   <PropertyGroup Condition="'$(TF_BUILD)' == 'true'">
     <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
   </PropertyGroup>
   
-  <!-- GitHub Actions -->
+  <!-- GitHub Actions
+  https://docs.github.com/en/actions/writing-workflows/choosing-what-your-workflow-does/store-information-in-variables#default-environment-variables
+  -->
   <PropertyGroup Condition="'$(GITHUB_ACTIONS)' == 'true'">
     <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
   </PropertyGroup>
   
-  <!-- AppVeyor -->
+  <!-- AppVeyor
+  https://www.appveyor.com/docs/environment-variables/
+  -->
   <PropertyGroup Condition="'$(APPVEYOR)' == 'true'">
     <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
   </PropertyGroup>
@@ -32,17 +38,23 @@
     <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
   </PropertyGroup>
   
-  <!-- Travis CI -->
+  <!-- Travis CI
+  https://docs.travis-ci.com/user/environment-variables/#default-environment-variables
+  -->
   <PropertyGroup Condition="'$(TRAVIS)' == 'true'">
     <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
   </PropertyGroup>
   
-  <!-- Circle CI -->
+  <!-- Circle CI
+  https://circleci.com/docs/variables/#built-in-environment-variables
+  -->
   <PropertyGroup Condition="'$(CIRCLECI)' == 'true'">
     <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
   </PropertyGroup>
   
-  <!-- AWS CodeBuild -->
+  <!-- AWS CodeBuild
+  https://docs.aws.amazon.com/codebuild/latest/userguide/build-env-ref-env-vars.html
+  -->
   <PropertyGroup Condition="'$(CODEBUILD_BUILD_ID)' != '' and '$(AWS_REGION)' != '' ">
     <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
   </PropertyGroup>
