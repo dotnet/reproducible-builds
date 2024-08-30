@@ -78,12 +78,12 @@ public class SourceLinkTests : TestBase
     {
         TheoryData<Dictionary<string, string?>, string> data = new()
         {
-            { new() { ["GITHUB_REF"] = "refs/pull/1234/merge" }, "pr1234" },
-            { new() { ["GITHUB_REF"] = "refs/heads/my-branch" }, "my-branch" },
-            { new() { ["GITHUB_REF"] = "refs/tags/v1.2.3" }, "v1.2.3" },
+            { new() { ["GITHUB_REF"] = "refs/pull/1234/merge" }, "refs/pull/1234/merge" },
+            { new() { ["GITHUB_REF"] = "refs/heads/my-branch" }, "refs/heads/my-branch" },
+            { new() { ["GITHUB_REF"] = "refs/tags/v1.2.3" }, "refs/tags/v1.2.3" },
 
-            { new() { ["BUILD_SOURCEBRANCH"] = "refs/heads/my-branch" }, "my-branch" },
-            { new() { ["BUILD_SOURCEBRANCH"] = "refs/tags/v1.2.3" }, "v1.2.3" },
+            { new() { ["BUILD_SOURCEBRANCH"] = "refs/heads/my-branch" }, "refs/heads/my-branch" },
+            { new() { ["BUILD_SOURCEBRANCH"] = "refs/tags/v1.2.3" }, "refs/tags/v1.2.3" },
 
             { new() { ["APPVEYOR_PULL_REQUEST_NUMBER"] = "1234" }, "pr1234" },
             { new() { ["APPVEYOR_REPO_TAG_NAME"] = "refs/tags/v1.2.3" }, "refs/tags/v1.2.3" },
@@ -96,16 +96,16 @@ public class SourceLinkTests : TestBase
 
             { new() { ["TRAVIS_PULL_REQUEST"] = "1234" }, "pr1234" },
             { new() { ["TRAVIS_BRANCH"] = "refs/heads/my-branch" }, "refs/heads/my-branch" },
-            { new() { ["TRAVIS_PULL_REQUEST"] = "1234", ["TRAVIS_BRANCH"] = "refs/heads/my-branch" }, "pr1234" },
+            { new() { ["TRAVIS_PULL_REQUEST"] = "1234", ["TRAVIS_BRANCH"] = "refs/heads/my-branch" }, "refs/heads/my-branch" },
             { new() { ["TRAVIS_PULL_REQUEST"] = "false", ["TRAVIS_BRANCH"] = "refs/heads/my-branch" }, "refs/heads/my-branch" },
 
             { new() { ["CIRCLE_PR_NUMBER"] = "1234" }, "pr1234" },
             { new() { ["CIRCLE_TAG"] = "refs/tags/v1.2.3" }, "refs/tags/v1.2.3" },
             { new() { ["CIRCLE_BRANCH"] = "refs/heads/my-branch" }, "refs/heads/my-branch" },
-            { new() { ["CIRCLE_PR_NUMBER"] = "1234", ["CIRCLE_TAG"] = "refs/tags/v1.2.3" }, "pr1234" },
-            { new() { ["CIRCLE_PR_NUMBER"] = "1234", ["CIRCLE_BRANCH"] = "refs/heads/my-branch" }, "pr1234" },
+            { new() { ["CIRCLE_PR_NUMBER"] = "1234", ["CIRCLE_TAG"] = "refs/tags/v1.2.3" }, "refs/tags/v1.2.3" },
+            { new() { ["CIRCLE_PR_NUMBER"] = "1234", ["CIRCLE_BRANCH"] = "refs/heads/my-branch" }, "refs/heads/my-branch" },
             { new() { ["CIRCLE_TAG"] = "refs/tags/v1.2.3", ["CIRCLE_BRANCH"] = "refs/heads/my-branch" }, "refs/tags/v1.2.3" },
-            { new() { ["CIRCLE_PR_NUMBER"] = "1234", ["CIRCLE_TAG"] = "refs/tags/v1.2.3", ["CIRCLE_BRANCH"] = "refs/heads/my-branch" }, "pr1234" },
+            { new() { ["CIRCLE_PR_NUMBER"] = "1234", ["CIRCLE_TAG"] = "refs/tags/v1.2.3", ["CIRCLE_BRANCH"] = "refs/heads/my-branch" }, "refs/tags/v1.2.3" },
 
             { new() { ["CI_COMMIT_TAG"] = "refs/tags/v1.2.3" }, "refs/tags/v1.2.3" },
             { new() { ["CI_MERGE_REQUEST_IID"] = "1234" }, "pr1234" },
@@ -115,21 +115,21 @@ public class SourceLinkTests : TestBase
             { new() { ["CI_COMMIT_TAG"] = "refs/tags/v1.2.3", ["CI_EXTERNAL_PULL_REQUEST_IID"] = "5678" }, "refs/tags/v1.2.3" },
             { new() { ["CI_COMMIT_TAG"] = "refs/tags/v1.2.3", ["CI_COMMIT_BRANCH"] = "refs/heads/my-branch" }, "refs/tags/v1.2.3" },
             { new() { ["CI_MERGE_REQUEST_IID"] = "1234", ["CI_EXTERNAL_PULL_REQUEST_IID"] = "5678" }, "pr1234" },
-            { new() { ["CI_MERGE_REQUEST_IID"] = "1234", ["CI_COMMIT_BRANCH"] = "refs/heads/my-branch" }, "pr1234" },
-            { new() { ["CI_EXTERNAL_PULL_REQUEST_IID"] = "5678", ["CI_COMMIT_BRANCH"] = "refs/heads/my-branch" }, "pr5678" },
+            { new() { ["CI_MERGE_REQUEST_IID"] = "1234", ["CI_COMMIT_BRANCH"] = "refs/heads/my-branch" }, "refs/heads/my-branch" },
+            { new() { ["CI_EXTERNAL_PULL_REQUEST_IID"] = "5678", ["CI_COMMIT_BRANCH"] = "refs/heads/my-branch" }, "refs/heads/my-branch" },
             { new() { ["CI_COMMIT_TAG"] = "refs/tags/v1.2.3", ["CI_MERGE_REQUEST_IID"] = "1234", ["CI_EXTERNAL_PULL_REQUEST_IID"] = "5678" }, "refs/tags/v1.2.3" },
             { new() { ["CI_COMMIT_TAG"] = "refs/tags/v1.2.3", ["CI_MERGE_REQUEST_IID"] = "1234", ["CI_COMMIT_BRANCH"] = "refs/heads/my-branch" }, "refs/tags/v1.2.3" },
             { new() { ["CI_COMMIT_TAG"] = "refs/tags/v1.2.3", ["CI_EXTERNAL_PULL_REQUEST_IID"] = "5678", ["CI_COMMIT_BRANCH"] = "refs/heads/my-branch" }, "refs/tags/v1.2.3" },
-            { new() { ["CI_MERGE_REQUEST_IID"] = "1234", ["CI_EXTERNAL_PULL_REQUEST_IID"] = "5678", ["CI_COMMIT_BRANCH"] = "refs/heads/my-branch" }, "pr1234" },
+            { new() { ["CI_MERGE_REQUEST_IID"] = "1234", ["CI_EXTERNAL_PULL_REQUEST_IID"] = "5678", ["CI_COMMIT_BRANCH"] = "refs/heads/my-branch" }, "refs/heads/my-branch" },
             { new() { ["CI_COMMIT_TAG"] = "refs/tags/v1.2.3", ["CI_MERGE_REQUEST_IID"] = "1234", ["CI_EXTERNAL_PULL_REQUEST_IID"] = "5678", ["CI_COMMIT_BRANCH"] = "refs/heads/my-branch" }, "refs/tags/v1.2.3" },
 
             { new() { ["BUDDY_EXECUTION_PULL_REQUEST_NO"] = "1234" }, "pr1234" },
             { new() { ["BUDDY_EXECUTION_TAG"] = "refs/tags/v1.2.3" }, "refs/tags/v1.2.3" },
             { new() { ["BUDDY_EXECUTION_BRANCH"] = "refs/heads/my-branch" }, "refs/heads/my-branch" },
-            { new() { ["BUDDY_EXECUTION_PULL_REQUEST_NO"] = "1234", ["BUDDY_EXECUTION_TAG"] = "refs/tags/v1.2.3" }, "pr1234" },
-            { new() { ["BUDDY_EXECUTION_PULL_REQUEST_NO"] = "1234", ["BUDDY_EXECUTION_BRANCH"] = "refs/heads/my-branch" }, "pr1234" },
+            { new() { ["BUDDY_EXECUTION_PULL_REQUEST_NO"] = "1234", ["BUDDY_EXECUTION_TAG"] = "refs/tags/v1.2.3" }, "refs/tags/v1.2.3" },
+            { new() { ["BUDDY_EXECUTION_PULL_REQUEST_NO"] = "1234", ["BUDDY_EXECUTION_BRANCH"] = "refs/heads/my-branch" }, "refs/heads/my-branch" },
             { new() { ["BUDDY_EXECUTION_TAG"] = "refs/tags/v1.2.3", ["BUDDY_EXECUTION_BRANCH"] = "refs/heads/my-branch" }, "refs/tags/v1.2.3" },
-            { new() { ["BUDDY_EXECUTION_PULL_REQUEST_NO"] = "1234", ["BUDDY_EXECUTION_BRANCH"] = "refs/heads/my-branch", ["BUDDY_EXECUTION_TAG"] = "refs/tags/v1.2.3" }, "pr1234" },
+            { new() { ["BUDDY_EXECUTION_PULL_REQUEST_NO"] = "1234", ["BUDDY_EXECUTION_BRANCH"] = "refs/heads/my-branch", ["BUDDY_EXECUTION_TAG"] = "refs/tags/v1.2.3" }, "refs/tags/v1.2.3" },
         };
 
         return data;
