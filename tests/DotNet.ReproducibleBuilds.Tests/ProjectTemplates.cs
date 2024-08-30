@@ -1,4 +1,5 @@
-﻿using Microsoft.Build.Utilities.ProjectCreation;
+﻿using Microsoft.Build.Evaluation;
+using Microsoft.Build.Utilities.ProjectCreation;
 
 namespace DotNet.ReproducibleBuilds.Tests;
 
@@ -20,7 +21,9 @@ internal static class ProjectTemplates
             .Import(Path.Combine(ThisAssemblyDirectory, "DotNet.ReproducibleBuilds.targets"))
             .Save();
 
+        ProjectCollection projectCollection = new(); // Create a new collection for each project to ensure environment variables aren't shared between tests
+
         return templates
-            .SdkCsproj(path: project.FullName, targetFramework: "net8.0");
+            .SdkCsproj(path: project.FullName, targetFramework: "net8.0", projectCollection: projectCollection);
     }
 }

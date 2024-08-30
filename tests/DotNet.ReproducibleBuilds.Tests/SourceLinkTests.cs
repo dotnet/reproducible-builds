@@ -81,25 +81,22 @@ public class SourceLinkTests : TestBase
     public void RepositoryBranchIsSet(string ci, string original, string expected)
     {
         using EnvironmentVariableSuppressor hostSuppressor = new("BUILD_SOURCEBRANCH"); // Suppress our own CI provider variables (i.e. Azure DevOps)
-        using EnvironmentVariableSuppressor ciSuppressor = new(ci); // Suppress the mock CI provider (just in case).
+        using EnvironmentVariableSuppressor ciSuppressor = new(ci); // Suppress the mock CI provider (just in case)
 
-        // If RepositoryBranch is set, it should take precedence over the CI provider variables
-        ProjectCreator.Templates
+        ProjectCreator project = ProjectCreator.Templates
             .ReproducibleBuildProject(GetRandomFile(".csproj"))
             .PropertyGroup()
-                .Property("RepositoryBranch", "explicitly-set")
-                .Property(ci, original)
+                .Property(ci, original);
+
+        // If RepositoryBranch is not set, it should be set from the CI provider property
+        project.Project
+            .GetPropertyValue("RepositoryBranch")
+            .Should().Be(expected);
+
+        // If RepositoryBranch is set, it should take precedence over the CI provider variables
+        project.Property("RepositoryBranch", "explicitly-set")
             .Project
             .GetPropertyValue("RepositoryBranch")
             .Should().Be("explicitly-set", "because explicitly setting `RepositoryBranch` should always win.");
-
-        // If RepositoryBranch is not set, it should be set from the CI provider property
-        ProjectCreator.Templates
-            .ReproducibleBuildProject(GetRandomFile(".csproj"))
-            .PropertyGroup()
-                .Property(ci, original)
-            .Project
-            .GetPropertyValue("RepositoryBranch")
-            .Should().Be(expected);
     }
 }
