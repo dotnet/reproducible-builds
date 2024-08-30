@@ -11,4 +11,14 @@ internal static class ProjectCreatorExtensions
 
         return project;
     }
+
+    public static ProjectCreator Properties(this ProjectCreator creator, IEnumerable<KeyValuePair<string, string?>> properties)
+    {
+        foreach (KeyValuePair<string, string?> property in properties)
+        {
+            creator.Property(property.Key, property.Value);
+        }
+
+        return creator;
+    }
 }

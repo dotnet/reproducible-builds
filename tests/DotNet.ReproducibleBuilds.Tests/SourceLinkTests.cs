@@ -51,42 +51,16 @@ public class SourceLinkTests : TestBase
     }
 
     [Theory]
-    [InlineData("GITHUB_REF", "refs/pull/1234/merge", "pr1234")]
-    [InlineData("GITHUB_REF", "refs/heads/my-branch", "my-branch")]
-    [InlineData("GITHUB_REF", "refs/tags/v1.2.3", "v1.2.3")]
-
-    [InlineData("BUILD_SOURCEBRANCH", "refs/heads/my-branch", "my-branch")]
-    [InlineData("BUILD_SOURCEBRANCH", "refs/tags/v1.2.3", "v1.2.3")]
-
-    [InlineData("APPVEYOR_PULL_REQUEST_NUMBER", "1234", "pr1234")]
-    [InlineData("APPVEYOR_REPO_TAG_NAME", "refs/tags/v1.2.3", "refs/tags/v1.2.3")]
-    [InlineData("APPVEYOR_REPO_BRANCH", "refs/heads/my-branch", "refs/heads/my-branch")]
-
-    [InlineData("TEAMCITY_BUILD_BRANCH", "refs/heads/my-branch", "refs/heads/my-branch")]
-
-    [InlineData("TRAVIS_PULL_REQUEST", "1234", "pr1234")]
-    [InlineData("TRAVIS_BRANCH", "refs/heads/my-branch", "refs/heads/my-branch")]
-
-    [InlineData("CIRCLE_PR_NUMBER", "1234", "pr1234")]
-    [InlineData("CIRCLE_TAG", "refs/heads/v1.2.3", "refs/heads/v1.2.3")]
-    [InlineData("CIRCLE_BRANCH", "refs/heads/my-branch", "refs/heads/my-branch")]
-
-    [InlineData("CI_COMMIT_TAG", "refs/tags/v1.2.3", "refs/tags/v1.2.3")]
-    [InlineData("CI_MERGE_REQUEST_IID", "1234", "pr1234")]
-    [InlineData("CI_COMMIT_BRANCH", "refs/heads/my-branch", "refs/heads/my-branch")]
-
-    [InlineData("BUDDY_EXECUTION_PULL_REQUEST_NO", "1234", "pr1234")]
-    [InlineData("BUDDY_EXECUTION_TAG", "refs/tags/v1.2.3", "refs/tags/v1.2.3")]
-    [InlineData("BUDDY_EXECUTION_BRANCH", "refs/heads/my-branch", "refs/heads/my-branch")]
-    public void RepositoryBranchIsSet(string ci, string original, string expected)
+    [MemberData(nameof(RepositoryBranchData))]
+    public void RepositoryBranchIsSet(Dictionary<string, string?> env, string expected)
     {
         using EnvironmentVariableSuppressor hostSuppressor = new("BUILD_SOURCEBRANCH"); // Suppress our own CI provider variables (i.e. Azure DevOps)
-        using EnvironmentVariableSuppressor ciSuppressor = new(ci); // Suppress the mock CI provider (just in case)
+        using IDisposable ciSuppressors = env.Select(kvp => new EnvironmentVariableSuppressor(kvp.Key)).ToDisposable(); // Suppress the mock CI provider (just in case)
 
         ProjectCreator project = ProjectCreator.Templates
             .ReproducibleBuildProject(GetRandomFile(".csproj"))
             .PropertyGroup()
-                .Property(ci, original);
+                .Properties(env);
 
         // If RepositoryBranch is not set, it should be set from the CI provider property
         project.Project
@@ -98,5 +72,66 @@ public class SourceLinkTests : TestBase
             .Project
             .GetPropertyValue("RepositoryBranch")
             .Should().Be("explicitly-set", "because explicitly setting `RepositoryBranch` should always win.");
+    }
+
+    public static TheoryData<Dictionary<string, string?>, string> RepositoryBranchData()
+    {
+        TheoryData<Dictionary<string, string?>, string> data = new()
+        {
+            { new() { ["GITHUB_REF"] = "refs/pull/1234/merge" }, "pr1234" },
+            { new() { ["GITHUB_REF"] = "refs/heads/my-branch" }, "my-branch" },
+            { new() { ["GITHUB_REF"] = "refs/tags/v1.2.3" }, "v1.2.3" },
+
+            { new() { ["BUILD_SOURCEBRANCH"] = "refs/heads/my-branch" }, "my-branch" },
+            { new() { ["BUILD_SOURCEBRANCH"] = "refs/tags/v1.2.3" }, "v1.2.3" },
+
+            { new() { ["APPVEYOR_PULL_REQUEST_NUMBER"] = "1234" }, "pr1234" },
+            { new() { ["APPVEYOR_REPO_TAG_NAME"] = "refs/tags/v1.2.3" }, "refs/tags/v1.2.3" },
+            { new() { ["APPVEYOR_REPO_BRANCH"] = "refs/heads/my-branch" }, "refs/heads/my-branch" },
+            { new() { ["APPVEYOR_PULL_REQUEST_NUMBER"] = "1234" , ["APPVEYOR_REPO_BRANCH"] = "refs/heads/my-branch" }, "pr1234" },
+            { new() { ["APPVEYOR_REPO_TAG_NAME"] = "refs/tags/v1.2.3" , ["APPVEYOR_REPO_BRANCH"] = "refs/heads/my-branch" }, "refs/tags/v1.2.3" },
+            { new() { ["APPVEYOR_PULL_REQUEST_NUMBER"] = "1234", ["APPVEYOR_REPO_TAG_NAME"] = "refs/tags/v1.2.3", ["APPVEYOR_REPO_BRANCH"] = "refs/heads/my-branch" }, "pr1234" },
+
+            { new() { ["TEAMCITY_BUILD_BRANCH"] = "refs/heads/my-branch" }, "refs/heads/my-branch" },
+
+            { new() { ["TRAVIS_PULL_REQUEST"] = "1234" }, "pr1234" },
+            { new() { ["TRAVIS_BRANCH"] = "refs/heads/my-branch" }, "refs/heads/my-branch" },
+            { new() { ["TRAVIS_PULL_REQUEST"] = "1234", ["TRAVIS_BRANCH"] = "refs/heads/my-branch" }, "pr1234" },
+            { new() { ["TRAVIS_PULL_REQUEST"] = "false", ["TRAVIS_BRANCH"] = "refs/heads/my-branch" }, "refs/heads/my-branch" },
+
+            { new() { ["CIRCLE_PR_NUMBER"] = "1234" }, "pr1234" },
+            { new() { ["CIRCLE_TAG"] = "refs/tags/v1.2.3" }, "refs/tags/v1.2.3" },
+            { new() { ["CIRCLE_BRANCH"] = "refs/heads/my-branch" }, "refs/heads/my-branch" },
+            { new() { ["CIRCLE_PR_NUMBER"] = "1234", ["CIRCLE_TAG"] = "refs/tags/v1.2.3" }, "pr1234" },
+            { new() { ["CIRCLE_PR_NUMBER"] = "1234", ["CIRCLE_BRANCH"] = "refs/heads/my-branch" }, "pr1234" },
+            { new() { ["CIRCLE_TAG"] = "refs/tags/v1.2.3", ["CIRCLE_BRANCH"] = "refs/heads/my-branch" }, "refs/tags/v1.2.3" },
+            { new() { ["CIRCLE_PR_NUMBER"] = "1234", ["CIRCLE_TAG"] = "refs/tags/v1.2.3", ["CIRCLE_BRANCH"] = "refs/heads/my-branch" }, "pr1234" },
+
+            { new() { ["CI_COMMIT_TAG"] = "refs/tags/v1.2.3" }, "refs/tags/v1.2.3" },
+            { new() { ["CI_MERGE_REQUEST_IID"] = "1234" }, "pr1234" },
+            { new() { ["CI_EXTERNAL_PULL_REQUEST_IID"] = "5678" }, "pr5678" },
+            { new() { ["CI_COMMIT_BRANCH"] = "refs/heads/my-branch" }, "refs/heads/my-branch" },
+            { new() { ["CI_COMMIT_TAG"] = "refs/tags/v1.2.3", ["CI_MERGE_REQUEST_IID"] = "1234" }, "refs/tags/v1.2.3" },
+            { new() { ["CI_COMMIT_TAG"] = "refs/tags/v1.2.3", ["CI_EXTERNAL_PULL_REQUEST_IID"] = "5678" }, "refs/tags/v1.2.3" },
+            { new() { ["CI_COMMIT_TAG"] = "refs/tags/v1.2.3", ["CI_COMMIT_BRANCH"] = "refs/heads/my-branch" }, "refs/tags/v1.2.3" },
+            { new() { ["CI_MERGE_REQUEST_IID"] = "1234", ["CI_EXTERNAL_PULL_REQUEST_IID"] = "5678" }, "pr1234" },
+            { new() { ["CI_MERGE_REQUEST_IID"] = "1234", ["CI_COMMIT_BRANCH"] = "refs/heads/my-branch" }, "pr1234" },
+            { new() { ["CI_EXTERNAL_PULL_REQUEST_IID"] = "5678", ["CI_COMMIT_BRANCH"] = "refs/heads/my-branch" }, "pr5678" },
+            { new() { ["CI_COMMIT_TAG"] = "refs/tags/v1.2.3", ["CI_MERGE_REQUEST_IID"] = "1234", ["CI_EXTERNAL_PULL_REQUEST_IID"] = "5678" }, "refs/tags/v1.2.3" },
+            { new() { ["CI_COMMIT_TAG"] = "refs/tags/v1.2.3", ["CI_MERGE_REQUEST_IID"] = "1234", ["CI_COMMIT_BRANCH"] = "refs/heads/my-branch" }, "refs/tags/v1.2.3" },
+            { new() { ["CI_COMMIT_TAG"] = "refs/tags/v1.2.3", ["CI_EXTERNAL_PULL_REQUEST_IID"] = "5678", ["CI_COMMIT_BRANCH"] = "refs/heads/my-branch" }, "refs/tags/v1.2.3" },
+            { new() { ["CI_MERGE_REQUEST_IID"] = "1234", ["CI_EXTERNAL_PULL_REQUEST_IID"] = "5678", ["CI_COMMIT_BRANCH"] = "refs/heads/my-branch" }, "pr1234" },
+            { new() { ["CI_COMMIT_TAG"] = "refs/tags/v1.2.3", ["CI_MERGE_REQUEST_IID"] = "1234", ["CI_EXTERNAL_PULL_REQUEST_IID"] = "5678", ["CI_COMMIT_BRANCH"] = "refs/heads/my-branch" }, "refs/tags/v1.2.3" },
+
+            { new() { ["BUDDY_EXECUTION_PULL_REQUEST_NO"] = "1234" }, "pr1234" },
+            { new() { ["BUDDY_EXECUTION_TAG"] = "refs/tags/v1.2.3" }, "refs/tags/v1.2.3" },
+            { new() { ["BUDDY_EXECUTION_BRANCH"] = "refs/heads/my-branch" }, "refs/heads/my-branch" },
+            { new() { ["BUDDY_EXECUTION_PULL_REQUEST_NO"] = "1234", ["BUDDY_EXECUTION_TAG"] = "refs/tags/v1.2.3" }, "pr1234" },
+            { new() { ["BUDDY_EXECUTION_PULL_REQUEST_NO"] = "1234", ["BUDDY_EXECUTION_BRANCH"] = "refs/heads/my-branch" }, "pr1234" },
+            { new() { ["BUDDY_EXECUTION_TAG"] = "refs/tags/v1.2.3", ["BUDDY_EXECUTION_BRANCH"] = "refs/heads/my-branch" }, "refs/tags/v1.2.3" },
+            { new() { ["BUDDY_EXECUTION_PULL_REQUEST_NO"] = "1234", ["BUDDY_EXECUTION_BRANCH"] = "refs/heads/my-branch", ["BUDDY_EXECUTION_TAG"] = "refs/tags/v1.2.3" }, "pr1234" },
+        };
+
+        return data;
     }
 }
