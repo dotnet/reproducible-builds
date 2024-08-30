@@ -2,40 +2,39 @@
   <PropertyGroup>
     <TargetFramework>netstandard1.0</TargetFramework>
     <DevelopmentDependency>true</DevelopmentDependency>
-
-    <NoPackageAnalysis>true</NoPackageAnalysis>
+    <SuppressDependenciesWhenPacking>true</SuppressDependenciesWhenPacking>
     <IncludeBuildOutput>false</IncludeBuildOutput>
-    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
     <EnableDefaultEmbeddedResourceItems>false</EnableDefaultEmbeddedResourceItems>
-    <GenerateAssemblyVersionInfo>false</GenerateAssemblyVersionInfo>
-    <NuspecFile>DotNet.ReproducibleBuilds.nuspec</NuspecFile>
+    <EnableSourceLink>true</EnableSourceLink>
+    <IsPackable>true</IsPackable>
+    <Description>Enables reproducible build settings</Description>
   </PropertyGroup> 
 
+  <ItemGroup>    
+    <PackageReference Include="Microsoft.SourceLink.AzureRepos.Git" Version="$(SourceLinkPackageVersion)" />
+    <PackageReference Include="Microsoft.SourceLink.Bitbucket.Git" Version="$(SourceLinkPackageVersion)" />
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="$(SourceLinkPackageVersion)" />
+    <PackageReference Include="Microsoft.SourceLink.GitLab" Version="$(SourceLinkPackageVersion)" />
+  </ItemGroup>
+
   <ItemGroup>
-    <PackageReference Include="Nerdbank.GitVersioning" Version="3.4.194" PrivateAssets="all" />
+    <None Include="DotNet.ReproducibleBuilds.props" Pack="true" PackagePath="build/" />
+    <None Include="DotNet.ReproducibleBuilds.targets" Pack="true" PackagePath="build/" />
+    
+    <None Include="DotNet.ReproducibleBuilds.shim.props" Pack="true" PackagePath="buildMultiTargeting/DotNet.ReproducibleBuilds.props" />
+    <None Include="DotNet.ReproducibleBuilds.shim.targets" Pack="true" PackagePath="buildMultiTargeting/DotNet.ReproducibleBuilds.targets" />
+    
+    <None Include="DotNet.ReproducibleBuilds.shim.props" Pack="true" PackagePath="buildTransitive/DotNet.ReproducibleBuilds.props" />
+    <None Include="DotNet.ReproducibleBuilds.shim.targets" Pack="true" PackagePath="buildTransitive/DotNet.ReproducibleBuilds.targets" />
   </ItemGroup>
 
   <Target Name="SetBuildVer" AfterTargets="GetBuildVersion" BeforeTargets="SetCloudBuildVersionVars;SetCloudBuildNumberWithVersion">
     <PropertyGroup>
       <CloudBuildNumber>$(BuildVersion)</CloudBuildNumber>
       <Version>$(BuildVersion)</Version>
-      <PackageVersion>$(BuildVersion)</PackageVersion>
-      <NuGetPackageVersion>$(BuildVersionSimple)</NuGetPackageVersion>
+      <PackageVersion>$(BuildVersionSimple)</PackageVersion>
       <AssemblyVersion>$(BuildVersionSimple)</AssemblyVersion>
-
-      <NuspecProperties>version=$(NuGetPackageVersion);RepositoryType=git;RepositoryCommit=$(GitCommitId);RepositoryUrl=$(GitRepositoryUrl)</NuspecProperties>
     </PropertyGroup>
-  </Target>
-  
-  <Target Name="CustomPack" BeforeTargets="Pack">
-    <!--
-      Manually package the nuget.
-
-      There's no way to use the pack targets without it putting Exclude=Build,Analyzers, which we don't
-      want. We also explicitly need the dependent reference's build targets to run (for soucelink). That's
-      why we specify the nuspec directly. 
-    -->
-    <Exec Command="nuget pack DotNet.ReproducibleBuilds.nuspec -outputdirectory $(PackageOutputPath) -basepath . -NoPackageAnalysis -Properties &quot;$(NuspecProperties)&quot;" />    
   </Target>
 </Project>

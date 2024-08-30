@@ -21,60 +21,64 @@ stages:
     - task: UseDotNet@2
       inputs:
         packageType: sdk
-      displayName: 'Use .NET Core sdk'
+        useGlobalJson: true
+      displayName: 'Use .NET SDK'
 
     - script: dotnet tool restore
-      displayName: Install NBGV and other dotnet tools
+      displayName: Install dotnet tools
 
     - script: dotnet nbgv cloud
       displayName: Set Version
 
-    - task: NuGetToolInstaller@1  
+    - script: dotnet test dirs.proj
+      displayName: Test
 
     - script: dotnet pack dirs.proj
       displayName: Create package(s)
 
-    - publish: $(Build.ArtifactStagingDirectory)\Packages
+    - publish: $(Build.ArtifactStagingDirectory)/Packages
       displayName: Publish build packages
       artifact: BuildPackages
 
-    - publish: config
-      displayName: Publish signing config
-      artifact: config
-
+# Keep signing variables in a separate stage
 - stage: CodeSign
   condition: and(succeeded('Build'), not(eq(variables['build.reason'], 'PullRequest')))
   jobs:
-  - deployment: CodeSign
+  - job: CodeSign
     displayName: Code Signing
     pool:
-      vmImage: windows-latest    
-    environment: Code Sign - CI
+      vmImage: windows-latest
     variables:
-    - group: SignClient-DNF
-    strategy:
-      runOnce:
-        deploy:
-          steps: 
-          - task: DotNetCoreCLI@2
-            inputs:
-              command: custom
-              custom: tool
-              arguments: install --tool-path . SignClient
-            displayName: Install SignTool tool
+    - group: SignTool-DNF
 
-          - pwsh: |
-              .\SignClient "Sign" `
-              --baseDirectory "$(Pipeline.Workspace)\BuildPackages" `
-              --input "**/*.nupkg" `
-              --config "$(Pipeline.Workspace)\config\SignClient.json" `
-              --user "$(SignClientUser)" `
-              --secret '$(SignClientSecret)' `
-              --name "DotNet.ReproducibleBuilds" `
-              --description "DotNet.ReproducibleBuilds" `
-              --descriptionUrl "https://github.com/dotnet/reproducible-builds"
-            displayName: Sign packages
-              
-          - publish: $(Pipeline.Workspace)/BuildPackages
-            displayName: Publish Signed Packages
-            artifact: SignedPackages
+    steps:
+    - download: current
+      artifact: BuildPackages
+
+    - task: UseDotNet@2
+      inputs:
+        packageType: sdk
+        useGlobalJson: true
+      displayName: 'Use .NET SDK'
+
+    - script: dotnet tool restore
+      displayName: Install dotnet tools
+
+    - pwsh: |
+        dotnet sign code azure-key-vault `
+        "**/*.nupkg" `
+        --base-directory "$(Pipeline.Workspace)/BuildPackages" `
+        --file-list "$(Build.SourcesDirectory)/config/filelist.txt" `
+        --publisher-name "DotNet.ReproducibleBuilds" `
+        --description "DotNet.ReproducibleBuilds" `
+        --description-url "https://github.com/dotnet/reproducible-builds" `
+        --azure-key-vault-tenant-id "$(SignTenantId)" `
+        --azure-key-vault-client-id "$(SignClientId)" `
+        --azure-key-vault-client-secret '$(SignClientSecret)' `
+        --azure-key-vault-certificate "$(SignKeyVaultCertificate)" `
+        --azure-key-vault-url "$(SignKeyVaultUrl)"
+      displayName: Sign packages
+
+    - publish: $(Pipeline.Workspace)/BuildPackages
+      displayName: Publish Signed Packages
+      artifact: SignedPackages

@@ -1,10 +1,50 @@
 <Project>
   <PropertyGroup>
-    <!-- Default to not packaging a project. Override per-project where dotnet sdk nuget packaging is desired. -->
-    <IsPackable Condition="'$(IsPackable)' == ''">false</IsPackable>    
+    <RepoRoot>$(MSBuildThisFileDirectory)</RepoRoot>
+
+    <!-- Default to not packaging a project. Override per-project where dotnet sdk nuget packaging
+    is desired. -->
+    <IsPackable Condition="'$(IsPackable)' == ''">false</IsPackable>
 
     <!-- set up package output path -->
-    <PackageOutputPath Condition="'$(Build_ArtifactStagingDirectory)' != ''">$(Build_ArtifactStagingDirectory)\packages\</PackageOutputPath>
+    <PackageOutputPath Condition="'$(Build_ArtifactStagingDirectory)' != ''">
+      $(Build_ArtifactStagingDirectory)\packages\</PackageOutputPath>
     <PackageOutputPath Condition="'$(PackageOutputPath)' == ''">$(MSBuildThisFileDirectory)packages\</PackageOutputPath>
+    <SourceLinkPackageVersion>8.0.0</SourceLinkPackageVersion>
+    <NerdbankPackageVersion>3.6.133</NerdbankPackageVersion>
+
+    <!-- Packaging properties -->
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <EnableSourceLink>true</EnableSourceLink>
+    <Authors>.NET Foundation and Contributors</Authors>
+    <Copyright>© .NET Foundation</Copyright>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None
+        Include="$(MSBuildThisFileDirectory)/README.md"
+        Pack="true"
+        PackagePath="/" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference
+        Include="Nerdbank.GitVersioning"
+        Version="$(NerdbankPackageVersion)"
+        PrivateAssets="all" />
+  </ItemGroup>
+
+  <Target
+      Name="PreparePackageReleaseNotesFromFiles"
+      Condition="'$(IsPackable)' == 'true'"
+      BeforeTargets="GenerateNuspec">
+    <PropertyGroup>
+      <!-- This path will be relative to each executing project -->
+      <PackageReleaseNotesFile>CHANGELOG.md</PackageReleaseNotesFile>
+      <PackageReleaseNotes>$([System.IO.File]::ReadAllText($(PackageReleaseNotesFile)))</PackageReleaseNotes>
+    </PropertyGroup>
+  </Target>
+
 </Project>
