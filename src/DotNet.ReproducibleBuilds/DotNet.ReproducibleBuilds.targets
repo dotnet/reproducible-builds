@@ -35,12 +35,12 @@
 
   <PropertyGroup>
     <_ReproducibleBuildsMSBuildMinVersion>17.8.0</_ReproducibleBuildsMSBuildMinVersion>
+    <_ReproducibleBuildsMSBuildVersion>$(MSBuildVersion)</_ReproducibleBuildsMSBuildVersion><!-- Store in a non-reserved property for testing -->
   </PropertyGroup>
 
   <Target Name="_ReproducibleBuildsMSBuildVersionCheck"
-        Condition=" '$([System.Version]::Parse($(_ReproducibleBuildsMSBuildMinVersion)).CompareTo($([System.Version]::Parse($(MSBuildVersion)))))' &gt; '0' "
-   BeforeTargets="ResolveAssemblyReferences;Build;Rebuild" >
-    <Warning
-        Text = "Reproducible builds require MSBuild '$(_ReproducibleBuildsMSBuildMinVersion)' or later. This project is using '$(MSBuildVersion)'. Use .NET SDK 8.0.100 or VS 17.8 or later." />
+    Condition="$([MSBuild]::VersionLessThan($(_ReproducibleBuildsMSBuildVersion), $(_ReproducibleBuildsMSBuildMinVersion)))"
+    BeforeTargets="ResolveAssemblyReferences;Build;Rebuild">
+    <Warning Text="Reproducible builds requires MSBuild '$(_ReproducibleBuildsMSBuildMinVersion)' or later. This project is using '$(_ReproducibleBuildsMSBuildVersion)'. Use .NET SDK 8.0.100 or VS 17.8 or later." />
   </Target>
 </Project>
