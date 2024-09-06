@@ -18,14 +18,10 @@ adding this package or manually as described here: https://devblogs.microsoft.co
 
 This package sets the following properties:
 - `PublishRepositoryUrl` = `true`
-- `EmbedUntrackedSources` = `true`
 - `DebugType` = `embedded`. You can specify `portable` in your project if you prefer, but you'll need to upload that `.snupkg` file too.
-- `IncludePackageReferencesDuringMarkupCompilation` = `true` (enables a fix for WPF)
 - `ContinuousIntegrationBuild` = `true` on CI systems
 
-It also adds SourceLink dependencies for all repo types (the right one will be used automatically).
-
-For more information on debugging with Source Link is [here](https://devblogs.microsoft.com/dotnet/improving-debug-time-productivity-with-source-link/).
+More information on `PublishRepositoryUrl` and debugging with Source Link is [here](https://devblogs.microsoft.com/dotnet/improving-debug-time-productivity-with-source-link/).
 
 ### Usage
 
