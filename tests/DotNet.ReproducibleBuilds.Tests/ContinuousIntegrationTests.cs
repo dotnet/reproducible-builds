@@ -26,7 +26,7 @@ public class ContinuousIntegrationTests : TestBase
 
     [Theory]
     [MemberData(nameof(MemberData))]
-    public void RespectsGlobalProperites(Dictionary<string, string> envVars)
+    public void RespectsGlobalProperties(Dictionary<string, string> envVars)
     {
         using EnvironmentVariableSuppressor hostSuppressor = new("TF_BUILD"); // Suppress our own CI provider variables (i.e. Azure DevOps)
 
