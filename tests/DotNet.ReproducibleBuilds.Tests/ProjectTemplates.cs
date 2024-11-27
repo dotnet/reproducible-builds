@@ -24,6 +24,6 @@ internal static class ProjectTemplates
         ProjectCollection projectCollection = new(); // Create a new collection for each project to ensure environment variables aren't shared between tests
 
         return templates
-            .SdkCsproj(path: project.FullName, targetFramework: "net8.0", projectCollection: projectCollection);
+            .SdkCsproj(path: project.FullName, targetFramework: "net9.0", projectCollection: projectCollection);
     }
 }
