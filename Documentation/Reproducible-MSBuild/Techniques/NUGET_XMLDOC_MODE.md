@@ -18,9 +18,8 @@ variables:
   NUGET_XMLDOC_MODE: ''
 ```
 
-Unfortunatelyly there is no way known at this time to override this setting via MSBuild properties. Each developer will need to check if any installed program has overriden this setting.
+Unfortunately there is no way known at this time to override this setting via MSBuild properties. Each developer will need to check if any installed program has changed this setting.
 
 ## Remarks
 
 The dotnet sdk docker image sets NUGET_XMLDOC_MODE=skip ([issue 2790](https://github.com/dotnet/dotnet-docker/issues/2790)), which causes builds run under this docker image to produce results different from a typical developer workstation. Thousands of developers are using this build image for their lab builds in the Azure organization.
-

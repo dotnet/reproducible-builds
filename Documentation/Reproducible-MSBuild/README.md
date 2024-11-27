@@ -1,6 +1,6 @@
 # Reproducible MSBuild
 
-If you're landing here, you're probably interested in making your builds more repeatable or improve build reliability in some way. This wiki records a number of techniques and tricks for making MSBuild based builds repeatable through isolation from other installed software on your build machines.
+If you're landing here, you're probably interested in making your builds more repeatable or improve build reliability in some way. This project describes a number of techniques and tricks for making MSBuild based builds repeatable through isolation from other installed software on your build machines.
 
 This follows a few principles:
 
@@ -22,19 +22,14 @@ Anything "installed" during your build should be removable by `git clean` on the
 
 If your repo has prerequisites, it's often polite to create an init.cmd that locally installs these prerequisites. If not, your README.md should indicate what prerequisites the user must install. 
 
-Additionally, it's best to strongly prefer prerequisites that can be installed side-by-side. For instance, the dotnetsdk can be "installed" by adding it to the path and disabling multi-level-lookup. 
+Additionally, it's best to strongly prefer prerequisites that can be installed side-by-side. For instance, the .NET SDK can be "installed" by adding it to the path and disabling multi-level-lookup. 
 
-> E.g. my README.md instructs users that they need to only install dotnetsdk according to the version in global.json, and the repo takes care of everything else. The user can either install it normally, or install it 'standalone'. The build lab always installs it 'standalone' to validate that we can always build with just one version installed.
+> E.g. my README.md instructs users that they need to only install .NET SDK according to the version in global.json, and the repo takes care of everything else. The user can either install it normally, or install it 'standalone'. The build lab always installs it 'standalone' to validate that we can always build with just one version installed.
 
 ## Tool versions matter
 
 Every tool used in the build should be pre-configured to support locking to an older version, in case of regression in the build tooling. Regressions include user "bugs" that the build tooling used to accept in a previous release.
 
-This guide generally prefers using dotnetsdk over Visual Studio as dotnetsdk's install script supports a `-Version` argument to easily lock a repo to an earlier sdk version until a regression can be addressed.
+This guide generally prefers using .NET SDK over Visual Studio as .NET SDK's install script supports a `-Version` argument to easily lock a repo to an earlier sdk version until a regression can be addressed.
 
-> E.g. my global.json is currently configured for 3.1.407 and latestPatch. However, if a new version regresses something, I know I can easily edit global.json to lock it back to 3.1.407 precisely. This unblocks my main branch builds, and gives me time to file a bug against the dotnetsdk for the regression and seek a workaround.
-
-
-
-
-
+> E.g. my global.json is currently configured for 8.0.400 and latestPatch. However, if a new version regresses something, I know I can easily edit global.json to lock it back to 8.0.300 precisely. This unblocks my main branch builds, and gives me time to file a bug against the .NET SDK for the regression and seek a workaround.

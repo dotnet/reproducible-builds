@@ -75,11 +75,3 @@ This project is licensed with the [MIT license](LICENSE).
 ## .NET Foundation
 
 DotNet.ReproducibleBuilds is a [.NET Foundation project](https://dotnetfoundation.org/projects).
-
-## Related Projects
-
-You should take a look at these related projects:
-
-- [.NET Core](https://github.com/dotnet/core)
-- [ASP.NET](https://github.com/aspnet)
-- [Mono](https://github.com/mono)

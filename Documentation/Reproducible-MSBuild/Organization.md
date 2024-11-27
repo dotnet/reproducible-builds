@@ -8,11 +8,11 @@ Each technique is categorized by two qualitative dimensions - Recommendation, an
 
 - Always: a technique that affects some build behavior that most users will utilize. For instance, resolution of C# framework assemblies.
 - Sometimes: a technique that affects only some infrequently used feature. This technique can generally be skipped if difficult to adopt and your team doesn't use that feature
-- Rarely: a technique that generally doesn't affect users of the msbuild feature it's improving. This technique should generally be skipped unless you face the specific symptoms described in the technique.
+- Rarely: a technique that generally doesn't affect users of the MSBuild feature it's improving. This technique should generally be skipped unless you face the specific symptoms described in the technique.
 
 ## Impact
 'Impact' characterizes how much a technique may interfere with your dev team's workflow. 
 
 - Low: a technique that is generally set once and forget. Developers might not realize it's even there.
 - Medium: developers working on the repo are likely to notice this technique in use, but find it generally easy to learn.
-- High: a technique that negatively impacts developers often enough that many may consider it too much of a hastle to adopt.
+- High: a technique that negatively impacts developers often enough that many may consider it too much of a hassle to adopt.
