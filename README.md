@@ -29,11 +29,11 @@ Add the following to your `Directory.Build.props` file so all projects in your s
 
 ```xml
 <ItemGroup>
-  <PackageReference Include="DotNet.ReproducibleBuilds" Version="1.2.4" PrivateAssets="All"/>
+  <PackageReference Include="DotNet.ReproducibleBuilds" Version="1.2.25" PrivateAssets="All"/>
 </ItemGroup>
 ```
 
-MSBuild 16.10 is required to generate binaries that can be fully reproduced. You'll need Visual Studio 2019 16.10 and/or .NET 5.0.300 SDK. You'll get a warning 
+MSBuild 17.8 is required to generate binaries that can be fully reproduced. You'll need Visual Studio 2022 17.8 and/or .NET 8.0.100 SDK. You'll get a warning 
 if you're using a lower version.
 
 Prerelease packages are available on the following [NuGet feed](https://dev.azure.com/dotnet/Projects/_packaging?_a=feed&feed=ReproducibleBuilds):
@@ -58,10 +58,8 @@ If you check out the same commit with the same SDK version and same nuget feed, 
 Add the following to the top of your projects or to `Directory.Build.props`:
 
 ```xml
-<Sdk Name="DotNet.ReproducibleBuilds.Isolated" Version="1.2.4" />
+<Sdk Name="DotNet.ReproducibleBuilds.Isolated" Version="1.2.25" />
 ```
-
-Tested on MSBuild 16.7 (Latest LTS at time of writing).
 
 ## Contributing
 
@@ -77,11 +75,3 @@ This project is licensed with the [MIT license](LICENSE).
 ## .NET Foundation
 
 DotNet.ReproducibleBuilds is a [.NET Foundation project](https://dotnetfoundation.org/projects).
-
-## Related Projects
-
-You should take a look at these related projects:
-
-- [.NET Core](https://github.com/dotnet/core)
-- [ASP.NET](https://github.com/aspnet)
-- [Mono](https://github.com/mono)
