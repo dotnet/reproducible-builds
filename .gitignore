@@ -13,6 +13,9 @@
 *.userosscache
 *.sln.docstates
 
+# .sln files because this repo uses slngen when needed
+*.sln
+
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
 
