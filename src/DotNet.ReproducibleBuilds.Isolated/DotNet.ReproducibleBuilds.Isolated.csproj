@@ -1,8 +1,8 @@
 ﻿<Project Sdk="Microsoft.Build.NoTargets">
 
   <PropertyGroup>
-    <TargetFramework>netstandard1.0</TargetFramework>
-    <!-- Don't emit netstandard1.0 as a dependency. We set TargetFramework just to get nuget restore working. -->
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <!-- Don't emit netstandard2.0 as a dependency. We set TargetFramework just to get nuget restore working. -->
     <SuppressDependenciesWhenPacking>true</SuppressDependenciesWhenPacking>
     <IsPackable>true</IsPackable>
   </PropertyGroup>
