@@ -10,7 +10,7 @@
   <!-- Nuget properties -->
   <PropertyGroup>
     <DevelopmentDependency>true</DevelopmentDependency>
-    <Description>Enables reproducible build settings, isolating build from side effects of other installed software on the samemachine.</Description>
+    <Description>Enables reproducible build settings, isolating build from side effects of other installed software on the same machine.</Description>
   </PropertyGroup>
 
   <ItemGroup>
