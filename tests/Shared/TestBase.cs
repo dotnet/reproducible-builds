@@ -15,6 +15,21 @@ public abstract class TestBase : IDisposable
         GC.SuppressFinalize(this);
     }
 
+    protected string GetCurrentTargetFrameworkMoniker()
+    {
+#if NETFRAMEWORK
+        return "net472";
+#elif NET8_0
+        return "net8.0";
+#elif NET9_0
+        return "net9.0";
+#elif NET10_0
+        return "net10.0";
+#else
+        throw new NotSupportedException("Unsupported target framework.");
+#endif
+    }
+
     protected virtual void Dispose(bool isDisposing)
     {
         TestRootPath.Refresh();

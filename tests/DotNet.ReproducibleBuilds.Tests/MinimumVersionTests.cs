@@ -20,7 +20,7 @@ public class MinimumVersionTests : TestBase
         };
 
         ProjectCreator project = ProjectCreator.Templates
-            .ReproducibleBuildProject(GetRandomFile(".csproj"));
+            .ReproducibleBuildsProject(GetRandomFile(".csproj"));
 
         if (suppress)
         {

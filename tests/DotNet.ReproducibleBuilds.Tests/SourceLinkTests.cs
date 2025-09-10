@@ -14,7 +14,7 @@ public class SourceLinkTests : TestBase
     public void PublishRepositoryUrlIsSet(bool? publishRepositoryUrl, bool expected)
     {
         ProjectCreator.Templates
-            .ReproducibleBuildProject(GetRandomFile(".csproj"))
+            .ReproducibleBuildsProject(GetRandomFile(".csproj"))
             .PropertyGroup()
                 .Property("PublishRepositoryUrl", publishRepositoryUrl.ToLowerInvariant())
             .Project
@@ -29,7 +29,7 @@ public class SourceLinkTests : TestBase
     public void DebugTypeIsSet(string? debugType, string expected)
     {
         ProjectCreator.Templates
-            .ReproducibleBuildProject(GetRandomFile(".csproj"))
+            .ReproducibleBuildsProject(GetRandomFile(".csproj"))
             .PropertyGroup()
                 .Property("DebugType", debugType)
             .Project
@@ -44,7 +44,7 @@ public class SourceLinkTests : TestBase
     public void EmbedUntrackedSourcesIsSet(bool? embedUntrackedSources, bool expected)
     {
         ProjectCreator.Templates
-            .ReproducibleBuildProject(GetRandomFile(".csproj"))
+            .ReproducibleBuildsProject(GetRandomFile(".csproj"))
             .PropertyGroup()
                 .Property("PublishRepositoryUrl", embedUntrackedSources.ToLowerInvariant())
             .Project
@@ -60,7 +60,7 @@ public class SourceLinkTests : TestBase
         using IDisposable ciSuppressors = env.Select(kvp => new EnvironmentVariableSuppressor(kvp.Key)).ToDisposable(); // Suppress the mock CI provider (just in case)
 
         ProjectCreator project = ProjectCreator.Templates
-            .ReproducibleBuildProject(GetRandomFile(".csproj"))
+            .ReproducibleBuildsProject(GetRandomFile(".csproj"))
             .PropertyGroup()
                 .Properties(env);
 
