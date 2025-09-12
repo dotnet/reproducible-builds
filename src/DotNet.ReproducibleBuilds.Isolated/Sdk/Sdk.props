@@ -37,6 +37,107 @@
       Text="Error, TargetFrameworkRootPath not initialized. If you're building for net462 or any other version of desktop NETFramework, please reference the 'Microsoft.NETFramework.ReferenceAssemblies' nuget package and run restore on the project to fix up your framework reference paths." />
   </Target>
 
+  <UsingTask
+  TaskName="TryFindGlobalJson"
+  TaskFactory="RoslynCodeTaskFactory"
+  AssemblyFile="$(MSBuildToolsPath)\Microsoft.Build.Tasks.Core.dll" >
+    <ParameterGroup>
+      <ExeDir ParameterType="System.String" />
+      <WorkingDir ParameterType="System.String" Required="true" />
+      <GlobalJsonEnforcesSdkVersion ParameterType="System.Boolean" Output="true" />
+    </ParameterGroup>
+    <Task>
+      <Using Namespace="System.Runtime.InteropServices" />
+      <Code Type="Class" Language="cs">
+        <![CDATA[
+using Microsoft.Build.Framework;
+using Microsoft.Build.Utilities;
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Text;
+using System.Runtime.InteropServices;
+
+// from https://github.com/microsoft/MSBuildLocator/blob/0bbf4988996176904ecc0dabb73165919fac605f/src/MSBuildLocator/NativeMethods.cs
+public class TryFindGlobalJson : Task
+{
+    public string ExeDir { get; set; }
+
+    public string WorkingDir { get; set; }
+
+    public bool GlobalJsonEnforcesSdkVersion { get; set; } = false;
+
+    internal const string HostFxrName = "hostfxr";
+
+    internal enum hostfxr_resolve_sdk2_flags_t
+    {
+        disallow_prerelease = 0x1,
+    };
+
+    internal enum hostfxr_resolve_sdk2_result_key_t
+    {
+        resolved_sdk_dir = 0,
+        global_json_path = 1,
+        requested_version = 2,
+    };
+
+    [UnmanagedFunctionPointer(CallingConvention.Cdecl, CharSet = CharSet.Auto)]
+    internal delegate void hostfxr_resolve_sdk2_result_fn(
+            hostfxr_resolve_sdk2_result_key_t key,
+            string value);
+
+    [DllImport(HostFxrName, CharSet = CharSet.Auto, ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
+    internal static extern int hostfxr_resolve_sdk2(
+        string exe_dir,
+        string working_dir,
+        hostfxr_resolve_sdk2_flags_t flags,
+        hostfxr_resolve_sdk2_result_fn result);
+
+
+    public override bool Execute()
+    {
+      bool found = false;
+      bool requestsVersion = false;
+      hostfxr_resolve_sdk2(exe_dir: ExeDir, working_dir: WorkingDir, flags: 0, result: (key, value) =>
+      {
+          if (key == hostfxr_resolve_sdk2_result_key_t.global_json_path)
+          {
+              found = true;
+          }
+
+          if (key == hostfxr_resolve_sdk2_result_key_t.requested_version)
+          {
+              requestsVersion = true;
+          }
+      });
+
+      GlobalJsonEnforcesSdkVersion = found && requestsVersion;
+      return true;
+    }
+}
+        ]]>
+      </Code>
+    </Task>
+  </UsingTask>
+
+  <!-- TODO: Move to targets -->
+  <!-- TODO: What target to hook -->
+  <!-- TODO: Naming -->
+  <Target Name="EnsureGlobalJson" BeforeTargets="CoreCompile">
+    <TryFindGlobalJson
+      WorkingDir="$(MSBuildProjectDirectory)">
+      <Output TaskParameter="GlobalJsonEnforcesSdkVersion" PropertyName="_GlobalJsonEnforcesSdkVersion" />
+    </TryFindGlobalJson>
+
+    <Warning
+      Condition="'$(_GlobalJsonEnforcesSdkVersion)' != 'True'"
+      Code="RPB0003"
+      HelpLink="https://github.com/dotnet/reproducible-builds/blob/main/docs/diagnostics/RPB0003.md"
+      Text="global.json not found, or does not specify an SDK version. Add one to ensure a consistent build environment." />
+  </Target>
+
   <!--
     Disable the extra implicit nuget package caches provided by dotnetsdk.
   -->

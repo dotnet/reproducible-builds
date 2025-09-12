@@ -15,6 +15,22 @@ public abstract class TestBase : IDisposable
         GC.SuppressFinalize(this);
     }
 
+    protected virtual void Dispose(bool isDisposing)
+    {
+        TestRootPath.Refresh();
+        if (TestRootPath.Exists)
+        {
+            try
+            {
+                TestRootPath.Delete(recursive: true);
+            }
+            catch (Exception)
+            {
+                // Ignored
+            }
+        }
+    }
+
     protected string GetCurrentTargetFrameworkMoniker()
     {
 #if NETFRAMEWORK
@@ -30,20 +46,17 @@ public abstract class TestBase : IDisposable
 #endif
     }
 
-    protected virtual void Dispose(bool isDisposing)
+    protected string GetCurrentSdkVersion()
     {
-        TestRootPath.Refresh();
-        if (TestRootPath.Exists)
-        {
-            try
-            {
-                TestRootPath.Delete(recursive: true);
-            }
-            catch (Exception)
-            {
-                // Ignored
-            }
-        }
+#if NET8_0 || NETFRAMEWORK
+        return "8.0.100";
+#elif NET9_0 || NETFRAMEWORK
+        return "9.0.100";
+#elif NET10_0 || NETFRAMEWORK
+        return "10.0.100";
+#else
+        throw new NotSupportedException("Unsupported target framework.");
+#endif
     }
 
     protected FileInfo GetRandomFile(string? extension = null)
