@@ -2,8 +2,8 @@
   <!--
     Isolate the build from unrelated installed software.
 
-    Each of these settings and rationale are detailed in the Documentation that can be found
-    at https://github.com/dotnet/reproducible-builds/blob/main/Documentation/Reproducible-MSBuild/Techniques/toc.md
+    Each of these settings and rationale are detailed in the documentation that can be found
+    at https://github.com/dotnet/reproducible-builds/blob/main/docs/Reproducible-MSBuild/Techniques/toc.md
   -->
 
   <!--
@@ -32,6 +32,8 @@
     <Message Text="TargetFrameworkVersion=$(TargetFrameworkVersion)" />
     <Warning
       Condition="'$(TargetFrameworkRootPath)' == '[UNDEFINED]' and '$(TargetFrameworkIdentifier)' == '.NETFramework'"
+      Code="RPB0002"
+      HelpLink="https://github.com/dotnet/reproducible-builds/blob/main/docs/diagnostics/RPB0002.md"
       Text="Error, TargetFrameworkRootPath not initialized. If you're building for net462 or any other version of desktop NETFramework, please reference the 'Microsoft.NETFramework.ReferenceAssemblies' nuget package and run restore on the project to fix up your framework reference paths." />
   </Target>
 

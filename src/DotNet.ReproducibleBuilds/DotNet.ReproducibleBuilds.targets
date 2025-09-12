@@ -41,6 +41,9 @@
   <Target Name="_ReproducibleBuildsMSBuildVersionCheck"
     Condition="$([MSBuild]::VersionLessThan($(_ReproducibleBuildsMSBuildVersion), $(_ReproducibleBuildsMSBuildMinVersion)))"
     BeforeTargets="ResolveAssemblyReferences;Build;Rebuild">
-    <Warning Text="Reproducible builds requires MSBuild '$(_ReproducibleBuildsMSBuildMinVersion)' or later. This project is using '$(_ReproducibleBuildsMSBuildVersion)'. Use .NET SDK 8.0.100 or VS 17.8 or later." />
+    <Warning
+      Code="RPB0001"
+      HelpLink="https://github.com/dotnet/reproducible-builds/blob/main/docs/diagnostics/RPB0001.md"
+      Text="DotNet.ReproducibleBuilds requires MSBuild '$(_ReproducibleBuildsMSBuildMinVersion)' or later. This project is using '$(_ReproducibleBuildsMSBuildVersion)'. Use .NET SDK 8.0.100 or VS 17.8 or later." />
   </Target>
 </Project>

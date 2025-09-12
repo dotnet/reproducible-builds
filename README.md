@@ -39,13 +39,13 @@ if you're using a lower version.
 Prerelease packages are available on the following [NuGet feed](https://dev.azure.com/dotnet/Projects/_packaging?_a=feed&feed=ReproducibleBuilds):
 `https://pkgs.dev.azure.com/dotnet/Projects/_packaging/ReproducibleBuilds/nuget/v3/index.json`
 
-## DotNet.ReproducibleBuilds.Isolated Documentation and nuget package
+## DotNet.ReproducibleBuilds.Isolated documentation and nuget package
 
 [![NuGet Version](https://img.shields.io/nuget/v/DotNet.ReproducibleBuilds.Isolated?style=flat&label=DotNet.ReproducibleBuilds.Isolated)](https://www.nuget.org/packages/DotNet.ReproducibleBuilds.Isolated)
 [![NuGet Downloads](https://img.shields.io/nuget/dt/DotNet.ReproducibleBuilds.Isolated?style=flat)](https://www.nuget.org/packages/DotNet.ReproducibleBuilds.Isolated)
 
 It's highly recommended that all projects enable these settings, either via 
-adding this package or manually, as described in [Documentation/Reproducible-MSBuild](Documentation/Reproducible-MSBuild/README.md).
+adding this package or manually, as described in [docs/Reproducible-MSBuild](docs/Reproducible-MSBuild/README.md).
 
 This package configures a variety of properties and item groups to prevent your build from unintentionally 
 depending on other installed software that's not described by your repo. All build dependencies should come
