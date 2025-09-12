@@ -47,19 +47,19 @@ public class ContinuousIntegrationTests : TestBase
 
     public static TheoryData<Dictionary<string, string>> MemberData()
     {
-        return new TheoryData<Dictionary<string, string>>
-        {
-            { new() { ["TF_BUILD"] = "True" } },
-            { new() { ["GITHUB_ACTIONS"] = "true" } },
-            { new() { ["APPVEYOR"] = "True" } },
-            { new() { ["CI"] = "true" } },
-            { new() { ["TRAVIS"] = "true" } },
-            { new() { ["CIRCLECI"] = "true" } },
-            { new() { ["CODEBUILD_BUILD_ID"] = "abc:123", ["AWS_REGION"] = "us-east-1" } },
-            { new() { ["BUILD_ID"] = "123", ["BUILD_URL"] = "https://buildserver.invalid/jenkins/job/MyJobName/123/" } },
-            { new() { ["BUILD_ID"] = "123", ["PROJECT_ID"] = "234" } },
-            { new() { ["TEAMCITY_VERSION"] = "10" } },
-            { new() { ["JB_SPACE_API_URL"] = "https://api.invalid/url" } },
-        };
+        return
+        [
+            new TheoryDataRow<Dictionary<string, string>>(new() {  ["TF_BUILD"] = "True" }),
+            new TheoryDataRow<Dictionary<string, string>>(new() { ["GITHUB_ACTIONS"] = "true" }),
+            new TheoryDataRow<Dictionary<string, string>>(new() { ["APPVEYOR"] = "True" }),
+            new TheoryDataRow<Dictionary<string, string>>(new() { ["CI"] = "true" }),
+            new TheoryDataRow<Dictionary<string, string>>(new() { ["TRAVIS"] = "true" }),
+            new TheoryDataRow<Dictionary<string, string>>(new() { ["CIRCLECI"] = "true" }),
+            new TheoryDataRow<Dictionary<string, string>>(new() { ["CODEBUILD_BUILD_ID"] = "abc:123", ["AWS_REGION"] = "us-east-1" }),
+            new TheoryDataRow<Dictionary<string, string>>(new() { ["BUILD_ID"] = "123", ["BUILD_URL"] = "https://buildserver.invalid/jenkins/job/MyJobName/123/" }),
+            new TheoryDataRow<Dictionary<string, string>>(new() { ["BUILD_ID"] = "123", ["PROJECT_ID"] = "234" }),
+            new TheoryDataRow<Dictionary<string, string>>(new() { ["TEAMCITY_VERSION"] = "10" }),
+            new TheoryDataRow<Dictionary<string, string>>(new() { ["JB_SPACE_API_URL"] = "https://api.invalid/url" }),
+        ];
     }
 }

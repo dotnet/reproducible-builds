@@ -2,6 +2,9 @@
   <PropertyGroup>
     <RepoRoot>$(MSBuildThisFileDirectory)</RepoRoot>
 
+    <!-- Default to including all projects in any SlnGen solution, as NoTargets projects are not included by default -->
+    <IncludeInSolutionFile>true</IncludeInSolutionFile>
+
     <!-- Default to not packaging a project. Override per-project where dotnet sdk nuget packaging
     is desired. -->
     <IsPackable Condition="'$(IsPackable)' == ''">false</IsPackable>
