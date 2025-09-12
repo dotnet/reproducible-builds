@@ -27,12 +27,6 @@
         PackagePath="/" />
   </ItemGroup>
 
-  <ItemGroup>
-    <PackageReference
-        Include="Nerdbank.GitVersioning"
-        PrivateAssets="all" />
-  </ItemGroup>
-
   <Target
       Name="PreparePackageReleaseNotesFromFiles"
       Condition="'$(IsPackable)' == 'true'"
