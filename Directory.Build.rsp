@@ -1,0 +1,4 @@
+# Since we use traversal projects (dirs.proj), ignore any stale .sln files.
+# These are generated, .gitignored, and may cause confusion.
+-ignoreProjectExtensions:.sln,.slnx
+

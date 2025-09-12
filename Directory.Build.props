@@ -10,7 +10,6 @@
     <PackageOutputPath Condition="'$(Build_ArtifactStagingDirectory)' != ''">
       $(Build_ArtifactStagingDirectory)\packages\</PackageOutputPath>
     <PackageOutputPath Condition="'$(PackageOutputPath)' == ''">$(MSBuildThisFileDirectory)packages\</PackageOutputPath>
-    <NerdbankPackageVersion>3.6.133</NerdbankPackageVersion>
 
     <!-- Packaging properties -->
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
@@ -26,13 +25,6 @@
         Include="$(MSBuildThisFileDirectory)/README.md"
         Pack="true"
         PackagePath="/" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference
-        Include="Nerdbank.GitVersioning"
-        Version="$(NerdbankPackageVersion)"
-        PrivateAssets="all" />
   </ItemGroup>
 
   <Target
