@@ -1,7 +1,7 @@
 ﻿using Microsoft.Build.Evaluation;
 using Microsoft.Build.Utilities.ProjectCreation;
 
-namespace DotNet.ReproducibleBuilds.Tests;
+namespace DotNet.ReproducibleBuilds.Tests.Shared;
 
 internal static class ProjectCreatorExtensions
 {

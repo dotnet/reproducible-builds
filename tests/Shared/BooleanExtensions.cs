@@ -1,6 +1,6 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 
-namespace DotNet.ReproducibleBuilds.Tests;
+namespace DotNet.ReproducibleBuilds.Tests.Shared;
 
 internal static class BooleanExtensions
 {

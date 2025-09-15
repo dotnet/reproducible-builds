@@ -1,4 +1,6 @@
-﻿using Microsoft.Build.Evaluation;
+﻿using DotNet.ReproducibleBuilds.Tests.Shared;
+
+using Microsoft.Build.Evaluation;
 using Microsoft.Build.Utilities.ProjectCreation;
 
 namespace DotNet.ReproducibleBuilds.Tests;

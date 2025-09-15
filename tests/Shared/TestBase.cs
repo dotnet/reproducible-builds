@@ -1,4 +1,4 @@
-﻿namespace DotNet.ReproducibleBuilds.Tests;
+﻿namespace DotNet.ReproducibleBuilds.Tests.Shared;
 
 public abstract class TestBase : IDisposable
 {

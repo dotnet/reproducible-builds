@@ -31,8 +31,8 @@
 
   <ItemGroup>
     <Compile Include="../Shared/*.cs" LinkBase="Shared" />
-    <None Include="$(RepoRoot)/src/DotNet.ReproducibleBuilds/*.props" CopyToOutputDirectory="PreserveNewest" />
-    <None Include="$(RepoRoot)/src/DotNet.ReproducibleBuilds/*.targets" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="$(RepoRoot)/src/DotNet.ReproducibleBuilds.Isolated/Sdk/*.props" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="$(RepoRoot)/src/DotNet.ReproducibleBuilds.Isolated/Sdk/*.targets" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 
   <ItemGroup>

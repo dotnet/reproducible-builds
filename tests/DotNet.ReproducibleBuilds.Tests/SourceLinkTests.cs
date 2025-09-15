@@ -1,4 +1,6 @@
-﻿using FluentAssertions;
+﻿using DotNet.ReproducibleBuilds.Tests.Shared;
+
+using FluentAssertions;
 using Microsoft.Build.Utilities.ProjectCreation;
 
 namespace DotNet.ReproducibleBuilds.Tests;
