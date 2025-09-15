@@ -30,6 +30,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Include="../Shared/*.cs" LinkBase="Shared" />
     <None Include="$(RepoRoot)/src/DotNet.ReproducibleBuilds/*.props" CopyToOutputDirectory="PreserveNewest" />
     <None Include="$(RepoRoot)/src/DotNet.ReproducibleBuilds/*.targets" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
