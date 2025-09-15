@@ -1,2 +1,19 @@
 <Project>
+  <Target Name="CheckTargetFrameworkRootPath" BeforeTargets="GetReferenceAssemblyPaths" Condition="'$(BuildingInsideVisualStudio)'!='true'">
+    <Message Text="TargetFrameworkRootPath=$(TargetFrameworkRootPath)" />
+    <Message Text="TargetFrameworkIdentifier=$(TargetFrameworkIdentifier)" />
+    <Message Text="TargetFrameworkVersion=$(TargetFrameworkVersion)" />
+    <Warning
+      Condition="'$(TargetFrameworkRootPath)' == '[UNDEFINED]' and '$(TargetFrameworkIdentifier)' == '.NETFramework'"
+      Code="RPB0002"
+      HelpLink="https://github.com/dotnet/reproducible-builds/blob/main/docs/diagnostics/RPB0002.md"
+      Text="Error, TargetFrameworkRootPath not initialized. If you're building for net462 or any other version of desktop NETFramework, please reference the 'Microsoft.NETFramework.ReferenceAssemblies' nuget package and run restore on the project to fix up your framework reference paths." />
+  </Target>
+
+  <!-- TODO: What target to hook -->
+  <Target Name="_ReproducibleBuildsValidateGlobalJsonSdkVersion" BeforeTargets="CoreCompile">
+    <ValidateGlobalJsonSdkVersion
+      ExeDir="$(NetCoreRoot)"
+      WorkingDir="$(MSBuildProjectDirectory)" />
+  </Target>
 </Project>

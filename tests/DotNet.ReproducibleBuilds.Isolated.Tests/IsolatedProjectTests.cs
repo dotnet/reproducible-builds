@@ -8,8 +8,6 @@ namespace DotNet.ReproducibleBuilds.Isolated.Tests;
 
 public class IsolatedProjectTests : TestBase
 {
-    // TODO: Assert that warning can be suppressed
-
     [Theory]
     [InlineData(true, false)]
     [InlineData(true, true)]

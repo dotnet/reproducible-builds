@@ -20,31 +20,21 @@
   </PropertyGroup>
 
   <!--
-    Disable msbuild's lookup of .NET Framework sdks thru OS registry. Instead, users should
+    Disable MSBuild's lookup of .NET Framework SDKs thru OS registry. Instead, users should
     add a PackageReference to the Microsoft.NETFramework.ReferenceAssemblies nuget in Directory.Build.props.
   -->
   <PropertyGroup>
     <TargetFrameworkRootPath Condition="'$(BuildingInsideVisualStudio)'!='true'">[UNDEFINED]</TargetFrameworkRootPath>
   </PropertyGroup>
-  <Target Name="CheckTargetFrameworkRootPath" BeforeTargets="GetReferenceAssemblyPaths" Condition="'$(BuildingInsideVisualStudio)'!='true'">
-    <Message Text="TargetFrameworkRootPath=$(TargetFrameworkRootPath)" />
-    <Message Text="TargetFrameworkIdentifier=$(TargetFrameworkIdentifier)" />
-    <Message Text="TargetFrameworkVersion=$(TargetFrameworkVersion)" />
-    <Warning
-      Condition="'$(TargetFrameworkRootPath)' == '[UNDEFINED]' and '$(TargetFrameworkIdentifier)' == '.NETFramework'"
-      Code="RPB0002"
-      HelpLink="https://github.com/dotnet/reproducible-builds/blob/main/docs/diagnostics/RPB0002.md"
-      Text="Error, TargetFrameworkRootPath not initialized. If you're building for net462 or any other version of desktop NETFramework, please reference the 'Microsoft.NETFramework.ReferenceAssemblies' nuget package and run restore on the project to fix up your framework reference paths." />
-  </Target>
+
 
   <UsingTask
-  TaskName="TryFindGlobalJson"
+  TaskName="ValidateGlobalJsonSdkVersion"
   TaskFactory="RoslynCodeTaskFactory"
   AssemblyFile="$(MSBuildToolsPath)\Microsoft.Build.Tasks.Core.dll" >
     <ParameterGroup>
       <ExeDir ParameterType="System.String" />
       <WorkingDir ParameterType="System.String" Required="true" />
-      <GlobalJsonEnforcesSdkVersion ParameterType="System.Boolean" Output="true" />
     </ParameterGroup>
     <Task>
       <Using Namespace="System.Runtime.InteropServices" />
@@ -61,13 +51,11 @@ using System.Text;
 using System.Runtime.InteropServices;
 
 // from https://github.com/microsoft/MSBuildLocator/blob/0bbf4988996176904ecc0dabb73165919fac605f/src/MSBuildLocator/NativeMethods.cs
-public class TryFindGlobalJson : Task
+public class ValidateGlobalJsonSdkVersion : Task
 {
     public string ExeDir { get; set; }
 
     public string WorkingDir { get; set; }
-
-    public bool GlobalJsonEnforcesSdkVersion { get; set; } = false;
 
     internal const string HostFxrName = "hostfxr";
 
@@ -113,7 +101,24 @@ public class TryFindGlobalJson : Task
           }
       });
 
-      GlobalJsonEnforcesSdkVersion = found && requestsVersion;
+      bool globalJsonEnforcesSdkVersion = found && requestsVersion;
+
+      if (!globalJsonEnforcesSdkVersion)
+      {
+          Log.LogWarning(
+              subcategory: null,
+              warningCode: "RPB0003",
+              helpKeyword: null,
+              helpLink: "https://github.com/dotnet/reproducible-builds/blob/main/docs/diagnostics/RPB0003.md",
+              file: null,
+              lineNumber: 0,
+              columnNumber: 0,
+              endLineNumber: 0,
+              endColumnNumber: 0,
+              message: "global.json not found, or does not specify an SDK version. Add one to ensure a consistent build environment.",
+              messageArgs: null);
+      }
+
       return true;
     }
 }
@@ -121,22 +126,6 @@ public class TryFindGlobalJson : Task
       </Code>
     </Task>
   </UsingTask>
-
-  <!-- TODO: Move to targets -->
-  <!-- TODO: What target to hook -->
-  <!-- TODO: Naming -->
-  <Target Name="EnsureGlobalJson" BeforeTargets="CoreCompile">
-    <TryFindGlobalJson
-      WorkingDir="$(MSBuildProjectDirectory)">
-      <Output TaskParameter="GlobalJsonEnforcesSdkVersion" PropertyName="_GlobalJsonEnforcesSdkVersion" />
-    </TryFindGlobalJson>
-
-    <Warning
-      Condition="'$(_GlobalJsonEnforcesSdkVersion)' != 'True'"
-      Code="RPB0003"
-      HelpLink="https://github.com/dotnet/reproducible-builds/blob/main/docs/diagnostics/RPB0003.md"
-      Text="global.json not found, or does not specify an SDK version. Add one to ensure a consistent build environment." />
-  </Target>
 
   <!--
     Disable the extra implicit nuget package caches provided by dotnetsdk.
