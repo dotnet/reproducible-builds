@@ -18,7 +18,7 @@ public class ContinuousIntegrationTests : TestBase
         using EnvironmentVariableSuppressor hostSuppressor = new("TF_BUILD"); // Suppress our own CI provider variables (i.e. Azure DevOps)
 
         ProjectCreator.Templates
-            .ReproducibleBuildProject(GetRandomFile(".csproj"))
+            .ReproducibleBuildsProject(GetRandomFile(".csproj"))
             .PropertyGroup()
                 .Property(ContinuousIntegrationBuild, value?.ToLowerInvariant())
             .Project
@@ -34,14 +34,14 @@ public class ContinuousIntegrationTests : TestBase
 
         // If ContinuousIntegrationBuild is not set, it should be set from the CI provider property
         ProjectCreator.Templates
-            .ReproducibleBuildProject(GetRandomFile(".csproj"))
+            .ReproducibleBuildsProject(GetRandomFile(".csproj"))
             .ProjectWithGlobalProperties(envVars)
             .GetPropertyValue(ContinuousIntegrationBuild)
             .Should().Be(true.ToLowerInvariant());
 
         // If ContinuousIntegrationBuild is set, it should take precedence over the CI provider variables
         ProjectCreator.Templates
-            .ReproducibleBuildProject(GetRandomFile(".csproj"))
+            .ReproducibleBuildsProject(GetRandomFile(".csproj"))
             .ProjectWithGlobalProperties(envVars.With(ContinuousIntegrationBuild, false.ToLowerInvariant()))
             .GetPropertyValue(ContinuousIntegrationBuild)
             .Should().Be(false.ToLowerInvariant(), "because explicitly setting `ContinuousIntegrationBuild` should always win.");

@@ -38,14 +38,6 @@
   </Target>
 
   <!--
-    Disable msbuild's lookup of dotnetcore, dotnet5+ framework reference assemblies through default install
-    locations. Instead, resolve from nuget feed.
-  -->
-  <PropertyGroup>
-    <NetCoreTargetingPackRoot>[UNDEFINED]</NetCoreTargetingPackRoot>
-  </PropertyGroup>
-
-  <!--
     Disable the extra implicit nuget package caches provided by dotnetsdk.
   -->
   <PropertyGroup>

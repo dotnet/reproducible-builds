@@ -9,7 +9,7 @@ internal static class ProjectTemplates
 {
     private static readonly string ThisAssemblyDirectory = Path.GetDirectoryName(typeof(ProjectTemplates).Assembly.Location)!;
 
-    public static ProjectCreator ReproducibleBuildProject(this ProjectCreatorTemplates templates, FileInfo project)
+    public static ProjectCreator ReproducibleBuildsProject(this ProjectCreatorTemplates templates, FileInfo project)
     {
         DirectoryInfo directory = project.Directory ?? throw new ArgumentException("Project's path does not appear to have a parent.", nameof(project));
 
@@ -26,6 +26,6 @@ internal static class ProjectTemplates
         ProjectCollection projectCollection = new(); // Create a new collection for each project to ensure environment variables aren't shared between tests
 
         return templates
-            .SdkCsproj(path: project.FullName, targetFramework: "net9.0", projectCollection: projectCollection);
+            .SdkCsproj(path: project.FullName, targetFramework: "net8.0", projectCollection: projectCollection);
     }
 }
