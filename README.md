@@ -29,7 +29,7 @@ Add the following to your `Directory.Build.props` file so all projects in your s
 
 ```xml
 <ItemGroup>
-  <PackageReference Include="DotNet.ReproducibleBuilds" Version="1.2.25" PrivateAssets="All"/>
+  <PackageReference Include="DotNet.ReproducibleBuilds" Version="1.2.39" PrivateAssets="All"/>
 </ItemGroup>
 ```
 
@@ -58,7 +58,7 @@ If you check out the same commit with the same SDK version and same nuget feed, 
 Add the following to the top of your projects or to `Directory.Build.props`:
 
 ```xml
-<Sdk Name="DotNet.ReproducibleBuilds.Isolated" Version="1.2.25" />
+<Sdk Name="DotNet.ReproducibleBuilds.Isolated" Version="1.2.39" />
 ```
 
 ## Contributing

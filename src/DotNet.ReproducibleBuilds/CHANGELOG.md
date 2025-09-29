@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.2.39]
+
+### Added
+
+- [Add codes and help links to existing warnings](https://github.com/dotnet/reproducible-builds/pull/68) - thanks @MattKotsenas!
+
 ## [1.2.25]
 
 ### Added
