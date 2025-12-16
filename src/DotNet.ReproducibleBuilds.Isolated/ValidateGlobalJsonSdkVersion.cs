@@ -56,36 +56,45 @@ public class ValidateGlobalJsonSdkVersion : Task
 
     public override bool Execute()
     {
-        // Prevent hostfxr from writing to stderr
-        hostfxr_error_writer_fn swallowErrors = new(message => { });
-        IntPtr errorWriter = Marshal.GetFunctionPointerForDelegate(swallowErrors);
-        IntPtr previousErrorWriter = hostfxr_set_error_writer(errorWriter);
-
         bool found = false;
         bool requestsVersion = false;
 
-        // Create the result callback delegate
-        hostfxr_resolve_sdk2_result_fn resultCallback = (key, value) =>
+        // Prevent hostfxr from writing to stderr
+        hostfxr_error_writer_fn swallowErrors = new(message => { });
+        IntPtr errorWriter = Marshal.GetFunctionPointerForDelegate(swallowErrors);
+        IntPtr? previousErrorWriter = null;
+
+        try
         {
-            if (key == hostfxr_resolve_sdk2_result_key_t.global_json_path)
+            previousErrorWriter = hostfxr_set_error_writer(errorWriter);
+
+            // Create the result callback delegate
+            hostfxr_resolve_sdk2_result_fn resultCallback = (key, value) =>
             {
-                found = true;
-            }
+                if (key == hostfxr_resolve_sdk2_result_key_t.global_json_path)
+                {
+                    found = true;
+                }
 
-            if (key == hostfxr_resolve_sdk2_result_key_t.requested_version)
+                if (key == hostfxr_resolve_sdk2_result_key_t.requested_version)
+                {
+                    requestsVersion = true;
+                }
+            };
+
+            hostfxr_resolve_sdk2(exe_dir: string.Empty, working_dir: WorkingDir, flags: 0, result: resultCallback);
+            GC.KeepAlive(resultCallback);
+        }
+        finally
+        {
+            if (previousErrorWriter is not null)
             {
-                requestsVersion = true;
+                hostfxr_set_error_writer(previousErrorWriter.Value);
             }
-        };
-
-        hostfxr_resolve_sdk2(exe_dir: string.Empty, working_dir: WorkingDir, flags: 0, result: resultCallback);
-        hostfxr_set_error_writer(previousErrorWriter);
-
-        GC.KeepAlive(swallowErrors);
-        GC.KeepAlive(resultCallback);
+            GC.KeepAlive(swallowErrors);
+        }
 
         bool globalJsonEnforcesSdkVersion = found && requestsVersion;
-
         if (!globalJsonEnforcesSdkVersion)
         {
             Log.LogWarning(
