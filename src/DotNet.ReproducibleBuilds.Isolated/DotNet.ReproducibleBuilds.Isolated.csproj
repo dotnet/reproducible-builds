@@ -1,10 +1,21 @@
-﻿<Project Sdk="Microsoft.Build.NoTargets">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <!-- Don't emit netstandard2.0 as a dependency. We set TargetFramework just to get nuget restore working. -->
-    <SuppressDependenciesWhenPacking>true</SuppressDependenciesWhenPacking>
+    <LangVersion>latest</LangVersion>
     <IsPackable>true</IsPackable>
+
+    <!-- MSBuild task packaging settings per https://learn.microsoft.com/en-us/visualstudio/msbuild/tutorial-custom-task-code-generation -->
+    <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+    <GenerateDependencyFile>true</GenerateDependencyFile>
+    <!-- Pack task assembly to tasks folder instead of lib -->
+    <BuildOutputTargetFolder>tasks</BuildOutputTargetFolder>
+    <!-- Don't expose task dependencies to consuming projects -->
+    <SuppressDependenciesWhenPacking>true</SuppressDependenciesWhenPacking>
+    <!-- NuGet warns about assemblies in non-lib folders; suppress since this is intentional for tasks -->
+    <NoWarn>$(NoWarn);NU5100;NU5128</NoWarn>
+    <!-- Hook into packaging to include dependencies -->
+    <TargetsForTfmSpecificBuildOutput>$(TargetsForTfmSpecificBuildOutput);CopyProjectReferencesToPackage</TargetsForTfmSpecificBuildOutput>
   </PropertyGroup>
 
   <!-- Nuget properties -->
@@ -14,12 +25,31 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <!-- MSBuild task base class; provided at runtime by MSBuild host -->
+    <PackageReference Include="Microsoft.Build.Utilities.Core" PrivateAssets="all" ExcludeAssets="Runtime" />
+  </ItemGroup>
+
+  <ItemGroup>
     <!--
       Use of Sdk pattern enables this package to automatically pull in the framework reference libraries
       nuget package.
     -->
     <None Include="Sdk\**" Pack="true" PackagePath="Sdk\" />
   </ItemGroup>
+
+  <!-- Include dependencies in the package -->
+  <Target Name="CopyProjectReferencesToPackage" DependsOnTargets="ResolveReferences">
+    <ItemGroup>
+      <BuildOutputInPackage Include="@(ReferenceCopyLocalPaths)" TargetPath="%(ReferenceCopyLocalPaths.DestinationSubPath)" />
+    </ItemGroup>
+  </Target>
+
+  <!-- Include deps.json in the package for proper assembly loading -->
+  <Target Name="AddBuildDependencyFileToBuiltProjectOutputGroupOutput" BeforeTargets="BuiltProjectOutputGroup" Condition=" '$(GenerateDependencyFile)' == 'true'">
+    <ItemGroup>
+      <BuiltProjectOutputGroupOutput Include="$(ProjectDepsFilePath)" TargetPath="$(ProjectDepsFileName)" FinalOutputPath="$(ProjectDepsFilePath)" />
+    </ItemGroup>
+  </Target>
 
   <Target Name="SetBuildVer" DependsOnTargets="GetBuildVersion" BeforeTargets="SetCloudBuildVersionVars;SetCloudBuildNumberWithVersion">
     <PropertyGroup>

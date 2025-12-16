@@ -1,6 +1,4 @@
-﻿using DotNet.ReproducibleBuilds.Tests.Shared;
-
-using Microsoft.Build.Evaluation;
+﻿using Microsoft.Build.Evaluation;
 using Microsoft.Build.Utilities.ProjectCreation;
 
 namespace DotNet.ReproducibleBuilds.Isolated.Tests;
@@ -17,8 +15,8 @@ internal static class ProjectTemplates
 
         return ProjectCreator
             .Create(path: project.FullName, sdk: ProjectCreatorConstants.SdkCsprojDefaultSdk, projectCollection: projectCollection)
-            .Import(Path.Combine(ThisAssemblyDirectory, "Sdk.props"))
+            .Import(Path.Combine(ThisAssemblyDirectory, "Sdk", "Sdk.props"))
             .CustomAction(configureProject)
-            .Import(Path.Combine(ThisAssemblyDirectory, "Sdk.targets"));
+            .Import(Path.Combine(ThisAssemblyDirectory, "Sdk", "Sdk.targets"));
     }
 }

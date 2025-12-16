@@ -12,6 +12,6 @@
 
   <!-- TODO: What target to hook -->
   <Target Name="_ReproducibleBuildsValidateGlobalJsonSdkVersion" BeforeTargets="CoreCompile">
-    <ValidateGlobalJsonSdkVersion WorkingDir="$(MSBuildProjectDirectory)" />
+    <DotNet.ReproducibleBuilds.Isolated.ValidateGlobalJsonSdkVersion WorkingDir="$(MSBuildProjectDirectory)" />
   </Target>
 </Project>

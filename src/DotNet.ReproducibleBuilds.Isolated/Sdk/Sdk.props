@@ -6,6 +6,10 @@
     at https://github.com/dotnet/reproducible-builds/blob/main/docs/Reproducible-MSBuild/Techniques/toc.md
   -->
 
+  <UsingTask
+    TaskName="DotNet.ReproducibleBuilds.Isolated.ValidateGlobalJsonSdkVersion"
+    AssemblyFile="$(MSBuildThisFileDirectory)..\tasks\netstandard2.0\DotNet.ReproducibleBuilds.Isolated.dll" />
+
   <!--
     Restrict the reference assembly search path to avoid machine-specific dependencies. See
     https://github.com/dotnet/msbuild/blob/3deec2fe6b7cdc7c3f2458d23d5451893872c031/documentation/wiki/ResolveAssemblyReference.md?plain=1#L148
@@ -26,115 +30,6 @@
   <PropertyGroup>
     <TargetFrameworkRootPath Condition="'$(BuildingInsideVisualStudio)'!='true'">[UNDEFINED]</TargetFrameworkRootPath>
   </PropertyGroup>
-
-
-  <UsingTask
-  TaskName="ValidateGlobalJsonSdkVersion"
-  TaskFactory="RoslynCodeTaskFactory"
-  AssemblyFile="$(MSBuildToolsPath)\Microsoft.Build.Tasks.Core.dll" >
-    <ParameterGroup>
-      <WorkingDir ParameterType="System.String" Required="true" />
-    </ParameterGroup>
-    <Task>
-      <Using Namespace="System.Runtime.InteropServices" />
-      <Code Type="Class" Language="cs">
-        <![CDATA[
-using Microsoft.Build.Framework;
-using Microsoft.Build.Utilities;
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Runtime.InteropServices;
-
-// from https://github.com/microsoft/MSBuildLocator/blob/0bbf4988996176904ecc0dabb73165919fac605f/src/MSBuildLocator/NativeMethods.cs
-public class ValidateGlobalJsonSdkVersion : Task
-{
-    public string WorkingDir { get; set; }
-
-    internal const string HostFxrName = "hostfxr";
-
-    internal enum hostfxr_resolve_sdk2_flags_t
-    {
-        disallow_prerelease = 0x1,
-    };
-
-    internal enum hostfxr_resolve_sdk2_result_key_t
-    {
-        resolved_sdk_dir = 0,
-        global_json_path = 1,
-        requested_version = 2,
-    };
-
-    [UnmanagedFunctionPointer(CallingConvention.Cdecl, CharSet = CharSet.Auto)]
-    internal delegate void hostfxr_resolve_sdk2_result_fn(
-            hostfxr_resolve_sdk2_result_key_t key,
-            string value);
-
-    [DllImport(HostFxrName, CharSet = CharSet.Auto, ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-    internal static extern int hostfxr_resolve_sdk2(
-        string exe_dir,
-        string working_dir,
-        hostfxr_resolve_sdk2_flags_t flags,
-        hostfxr_resolve_sdk2_result_fn result);
-
-    [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-    internal delegate void hostfxr_error_writer_fn(IntPtr message);
-
-    [DllImport(HostFxrName, ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-    internal static extern IntPtr hostfxr_set_error_writer(IntPtr error_writer);
-
-    public override bool Execute()
-    {
-    System.Diagnostics.Debugger.Break();
-        hostfxr_error_writer_fn swallowErrors = new(message => { });
-        IntPtr errorWriter = Marshal.GetFunctionPointerForDelegate(swallowErrors);
-        IntPtr previousErrorWriter = hostfxr_set_error_writer(errorWriter);
-
-        bool found = false;
-        bool requestsVersion = false;
-        hostfxr_resolve_sdk2(exe_dir: string.Empty, working_dir: WorkingDir, flags: 0, result: (key, value) =>
-        {
-            if (key == hostfxr_resolve_sdk2_result_key_t.global_json_path)
-            {
-                found = true;
-            }
-
-            if (key == hostfxr_resolve_sdk2_result_key_t.requested_version)
-            {
-                requestsVersion = true;
-            }
-        });
-
-        hostfxr_set_error_writer(previousErrorWriter);
-
-        bool globalJsonEnforcesSdkVersion = found && requestsVersion;
-
-        if (!globalJsonEnforcesSdkVersion)
-        {
-            Log.LogWarning(
-                subcategory: null,
-                warningCode: "RPB0003",
-                helpKeyword: null,
-                helpLink: "https://github.com/dotnet/reproducible-builds/blob/main/docs/diagnostics/RPB0003.md",
-                file: null,
-                lineNumber: 0,
-                columnNumber: 0,
-                endLineNumber: 0,
-                endColumnNumber: 0,
-                message: "global.json not found, or does not specify an SDK version. Add one to ensure a consistent build environment.",
-                messageArgs: null);
-        }
-
-        return true;
-    }
-}
-        ]]>
-      </Code>
-    </Task>
-  </UsingTask>
 
   <!--
     Disable the extra implicit nuget package caches provided by dotnetsdk.
