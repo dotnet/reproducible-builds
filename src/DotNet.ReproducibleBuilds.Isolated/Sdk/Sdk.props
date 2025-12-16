@@ -33,7 +33,6 @@
   TaskFactory="RoslynCodeTaskFactory"
   AssemblyFile="$(MSBuildToolsPath)\Microsoft.Build.Tasks.Core.dll" >
     <ParameterGroup>
-      <ExeDir ParameterType="System.String" />
       <WorkingDir ParameterType="System.String" Required="true" />
     </ParameterGroup>
     <Task>
@@ -53,8 +52,6 @@ using System.Runtime.InteropServices;
 // from https://github.com/microsoft/MSBuildLocator/blob/0bbf4988996176904ecc0dabb73165919fac605f/src/MSBuildLocator/NativeMethods.cs
 public class ValidateGlobalJsonSdkVersion : Task
 {
-    public string ExeDir { get; set; }
-
     public string WorkingDir { get; set; }
 
     internal const string HostFxrName = "hostfxr";
@@ -83,43 +80,55 @@ public class ValidateGlobalJsonSdkVersion : Task
         hostfxr_resolve_sdk2_flags_t flags,
         hostfxr_resolve_sdk2_result_fn result);
 
+    [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+    internal delegate void hostfxr_error_writer_fn(IntPtr message);
+
+    [DllImport(HostFxrName, ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
+    internal static extern IntPtr hostfxr_set_error_writer(IntPtr error_writer);
 
     public override bool Execute()
     {
-      bool found = false;
-      bool requestsVersion = false;
-      hostfxr_resolve_sdk2(exe_dir: ExeDir, working_dir: WorkingDir, flags: 0, result: (key, value) =>
-      {
-          if (key == hostfxr_resolve_sdk2_result_key_t.global_json_path)
-          {
-              found = true;
-          }
+    System.Diagnostics.Debugger.Break();
+        hostfxr_error_writer_fn swallowErrors = new(message => { });
+        IntPtr errorWriter = Marshal.GetFunctionPointerForDelegate(swallowErrors);
+        IntPtr previousErrorWriter = hostfxr_set_error_writer(errorWriter);
 
-          if (key == hostfxr_resolve_sdk2_result_key_t.requested_version)
-          {
-              requestsVersion = true;
-          }
-      });
+        bool found = false;
+        bool requestsVersion = false;
+        hostfxr_resolve_sdk2(exe_dir: string.Empty, working_dir: WorkingDir, flags: 0, result: (key, value) =>
+        {
+            if (key == hostfxr_resolve_sdk2_result_key_t.global_json_path)
+            {
+                found = true;
+            }
 
-      bool globalJsonEnforcesSdkVersion = found && requestsVersion;
+            if (key == hostfxr_resolve_sdk2_result_key_t.requested_version)
+            {
+                requestsVersion = true;
+            }
+        });
 
-      if (!globalJsonEnforcesSdkVersion)
-      {
-          Log.LogWarning(
-              subcategory: null,
-              warningCode: "RPB0003",
-              helpKeyword: null,
-              helpLink: "https://github.com/dotnet/reproducible-builds/blob/main/docs/diagnostics/RPB0003.md",
-              file: null,
-              lineNumber: 0,
-              columnNumber: 0,
-              endLineNumber: 0,
-              endColumnNumber: 0,
-              message: "global.json not found, or does not specify an SDK version. Add one to ensure a consistent build environment.",
-              messageArgs: null);
-      }
+        hostfxr_set_error_writer(previousErrorWriter);
 
-      return true;
+        bool globalJsonEnforcesSdkVersion = found && requestsVersion;
+
+        if (!globalJsonEnforcesSdkVersion)
+        {
+            Log.LogWarning(
+                subcategory: null,
+                warningCode: "RPB0003",
+                helpKeyword: null,
+                helpLink: "https://github.com/dotnet/reproducible-builds/blob/main/docs/diagnostics/RPB0003.md",
+                file: null,
+                lineNumber: 0,
+                columnNumber: 0,
+                endLineNumber: 0,
+                endColumnNumber: 0,
+                message: "global.json not found, or does not specify an SDK version. Add one to ensure a consistent build environment.",
+                messageArgs: null);
+        }
+
+        return true;
     }
 }
         ]]>
