@@ -1,5 +1,11 @@
 # Changelog
 
+## [2.0.0]
+
+### Added
+
+- Warn if not using `global.json` to enforce consistent SDK versions
+
 ## [1.2.39]
 
 ### Added
@@ -19,4 +25,3 @@
 ### Changed
 
 - [When using the Isolated SDK, disable SDK-delivered implicit library packages](https://github.com/dotnet/reproducible-builds/pull/21) - thanks @cmeeren!
-
