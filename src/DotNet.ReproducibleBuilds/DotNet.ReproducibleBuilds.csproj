@@ -22,4 +22,5 @@
     <None Include="DotNet.ReproducibleBuilds.shim.props" Pack="true" PackagePath="buildTransitive/DotNet.ReproducibleBuilds.props" />
     <None Include="DotNet.ReproducibleBuilds.shim.targets" Pack="true" PackagePath="buildTransitive/DotNet.ReproducibleBuilds.targets" />
   </ItemGroup>
+
 </Project>
