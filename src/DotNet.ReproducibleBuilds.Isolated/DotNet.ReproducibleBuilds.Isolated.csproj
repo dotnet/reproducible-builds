@@ -39,12 +39,4 @@
       <BuiltProjectOutputGroupOutput Include="$(ProjectDepsFilePath)" TargetPath="$(ProjectDepsFileName)" FinalOutputPath="$(ProjectDepsFilePath)" />
     </ItemGroup>
   </Target>
-
-  <Target Name="SetBuildVer" DependsOnTargets="GetBuildVersion" BeforeTargets="SetCloudBuildVersionVars;SetCloudBuildNumberWithVersion">
-    <PropertyGroup>
-      <!-- Use the simple version instead, overriding default from Nerdbank.GitVersioning -->
-      <PackageVersion>$(BuildVersionSimple)</PackageVersion>
-      <PackageVersion Condition="'$(VersionSuffix)' != ''">$(PackageVersion)-$(VersionSuffix)</PackageVersion>
-    </PropertyGroup>
-  </Target>
 </Project>

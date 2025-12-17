@@ -22,13 +22,4 @@
     <None Include="DotNet.ReproducibleBuilds.shim.props" Pack="true" PackagePath="buildTransitive/DotNet.ReproducibleBuilds.props" />
     <None Include="DotNet.ReproducibleBuilds.shim.targets" Pack="true" PackagePath="buildTransitive/DotNet.ReproducibleBuilds.targets" />
   </ItemGroup>
-
-  <Target Name="SetBuildVer" AfterTargets="GetBuildVersion" BeforeTargets="SetCloudBuildVersionVars;SetCloudBuildNumberWithVersion">
-    <PropertyGroup>
-      <CloudBuildNumber>$(BuildVersion)</CloudBuildNumber>
-      <Version>$(BuildVersion)</Version>
-      <PackageVersion>$(BuildVersionSimple)</PackageVersion>
-      <AssemblyVersion>$(BuildVersionSimple)</AssemblyVersion>
-    </PropertyGroup>
-  </Target>
 </Project>
