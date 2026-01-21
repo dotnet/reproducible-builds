@@ -1,2 +1,5 @@
 <Project>
+  <Target Name="_ReproducibleBuildsValidateGlobalJsonSdkVersion" BeforeTargets="PrepareForBuild">
+    <DotNet.ReproducibleBuilds.Isolated.ValidateGlobalJsonSdkVersion WorkingDir="$(MSBuildProjectDirectory)" />
+  </Target>
 </Project>

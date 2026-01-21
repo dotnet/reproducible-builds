@@ -4,5 +4,6 @@
 - [DisableImplicitNuGetFallbackFolder](./DisableImplicitNuGetFallbackFolder.md)
 - [DisableImplicitLibraryPacksFolder](./DisableImplicitLibraryPacksFolder.md)
 - [DOTNET_MULTILEVEL_LOOKUP](./DOTNET_MULTILEVEL_LOOKUP.md)
+- [GlobalJson](./GlobalJson.md)
 - [NUGET_XMLDOC_MODE](./NUGET_XMLDOC_MODE.md)
 - [TargetFrameworkRootPath](./TargetFrameworkRootPath.md)

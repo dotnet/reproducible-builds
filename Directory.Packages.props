@@ -1,18 +1,29 @@
 <Project>
+
   <PropertyGroup>
     <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
   </PropertyGroup>
 
   <ItemGroup Label="Packaging">
-    <GlobalPackageReference Include="Nerdbank.GitVersioning" Version="3.7.115" />
+    <GlobalPackageReference Include="Nerdbank.GitVersioning" Version="3.9.50" />
   </ItemGroup>
+
+  <ItemGroup Label="Public dependencies">
+    <!--
+      Consult https://learn.microsoft.com/en-us/dotnet/core/porting/versioning-sdk-msbuild-vs when updating
+      versions. Be sure not to exceed the minimum supported MSBuild version.
+    -->
+    <PackageVersion Include="Microsoft.Build.Utilities.Core" Version="17.8.43" />
+  </ItemGroup>
+
   <ItemGroup Label="Testing">
     <PackageVersion Include="coverlet.collector" Version="6.0.4" />
     <PackageVersion Include="FluentAssertions" Version="7.2.0" />
-    <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.14.1" />
-    <PackageVersion Include="MSBuild.ProjectCreation" Version="15.0.0" />
-    <PackageVersion Include="Polyfill" Version="8.8.1" />
-    <PackageVersion Include="xunit.v3" Version="3.0.1" />
-    <PackageVersion Include="xunit.runner.visualstudio" Version="3.1.4" />
+    <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="18.0.1" />
+    <PackageVersion Include="MSBuild.ProjectCreation" Version="17.0.1" />
+    <PackageVersion Include="Polyfill" Version="9.3.4" />
+    <PackageVersion Include="xunit.v3" Version="3.2.1" />
+    <PackageVersion Include="xunit.runner.visualstudio" Version="3.1.5" />
   </ItemGroup>
+
 </Project>

@@ -6,6 +6,10 @@
     at https://github.com/dotnet/reproducible-builds/blob/main/docs/Reproducible-MSBuild/Techniques/toc.md
   -->
 
+  <UsingTask
+    TaskName="DotNet.ReproducibleBuilds.Isolated.ValidateGlobalJsonSdkVersion"
+    AssemblyFile="$(MSBuildThisFileDirectory)..\tasks\netstandard2.0\DotNet.ReproducibleBuilds.Isolated.dll" />
+
   <!--
     Restrict the reference assembly search path to avoid machine-specific dependencies. See
     https://github.com/dotnet/msbuild/blob/3deec2fe6b7cdc7c3f2458d23d5451893872c031/documentation/wiki/ResolveAssemblyReference.md?plain=1#L148
@@ -20,7 +24,7 @@
   </PropertyGroup>
 
   <!--
-    Disable msbuild's lookup of .NET Framework sdks thru OS registry. Instead, users should
+    Disable MSBuild's lookup of .NET Framework SDKs thru OS registry. Instead, users should
     add a PackageReference to the Microsoft.NETFramework.ReferenceAssemblies nuget in Directory.Build.props.
   -->
   <PropertyGroup>

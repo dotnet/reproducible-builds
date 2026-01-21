@@ -10,25 +10,17 @@
     <EnableSourceLink>true</EnableSourceLink>
     <IsPackable>true</IsPackable>
     <Description>Enables reproducible build settings</Description>
-  </PropertyGroup> 
+  </PropertyGroup>
 
   <ItemGroup>
     <None Include="DotNet.ReproducibleBuilds.props" Pack="true" PackagePath="build/" />
     <None Include="DotNet.ReproducibleBuilds.targets" Pack="true" PackagePath="build/" />
-    
+
     <None Include="DotNet.ReproducibleBuilds.shim.props" Pack="true" PackagePath="buildMultiTargeting/DotNet.ReproducibleBuilds.props" />
     <None Include="DotNet.ReproducibleBuilds.shim.targets" Pack="true" PackagePath="buildMultiTargeting/DotNet.ReproducibleBuilds.targets" />
-    
+
     <None Include="DotNet.ReproducibleBuilds.shim.props" Pack="true" PackagePath="buildTransitive/DotNet.ReproducibleBuilds.props" />
     <None Include="DotNet.ReproducibleBuilds.shim.targets" Pack="true" PackagePath="buildTransitive/DotNet.ReproducibleBuilds.targets" />
   </ItemGroup>
 
-  <Target Name="SetBuildVer" AfterTargets="GetBuildVersion" BeforeTargets="SetCloudBuildVersionVars;SetCloudBuildNumberWithVersion">
-    <PropertyGroup>
-      <CloudBuildNumber>$(BuildVersion)</CloudBuildNumber>
-      <Version>$(BuildVersion)</Version>
-      <PackageVersion>$(BuildVersionSimple)</PackageVersion>
-      <AssemblyVersion>$(BuildVersionSimple)</AssemblyVersion>
-    </PropertyGroup>
-  </Target>
 </Project>

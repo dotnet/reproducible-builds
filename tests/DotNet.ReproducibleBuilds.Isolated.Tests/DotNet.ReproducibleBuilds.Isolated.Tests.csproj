@@ -30,9 +30,24 @@
   </ItemGroup>
 
   <ItemGroup>
+    <!-- Ensure the main project builds first so the DLL exists. Use SetTargetFramework to avoid multi-targeting issues. -->
+    <ProjectReference Include="$(RepoRoot)/src/DotNet.ReproducibleBuilds.Isolated/DotNet.ReproducibleBuilds.Isolated.csproj">
+      <ResolveableAssembly>false</ResolveableAssembly>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+      <OverridePlatformNegotiationValue>AnyCPU</OverridePlatformNegotiationValue>
+      <SkipGetTargetFrameworkProperties>true</SkipGetTargetFrameworkProperties>
+      <GlobalPropertiesToRemove>TargetFramework;TargetFrameworks</GlobalPropertiesToRemove>
+    </ProjectReference>
+  </ItemGroup>
+
+  <ItemGroup>
     <Compile Include="../Shared/*.cs" LinkBase="Shared" />
-    <None Include="$(RepoRoot)/src/DotNet.ReproducibleBuilds.Isolated/Sdk/*.props" CopyToOutputDirectory="PreserveNewest" />
-    <None Include="$(RepoRoot)/src/DotNet.ReproducibleBuilds.Isolated/Sdk/*.targets" CopyToOutputDirectory="PreserveNewest" />
+
+    <!-- Copy main project resources to output directory matching NuGet package layout -->
+    <None Include="$(RepoRoot)/src/DotNet.ReproducibleBuilds.Isolated/Sdk/*.props" CopyToOutputDirectory="PreserveNewest" Link="Sdk\%(Filename)%(Extension)" />
+    <None Include="$(RepoRoot)/src/DotNet.ReproducibleBuilds.Isolated/Sdk/*.targets" CopyToOutputDirectory="PreserveNewest" Link="Sdk\%(Filename)%(Extension)" />
+    <None Include="$(RepoRoot)/src/DotNet.ReproducibleBuilds.Isolated/bin/$(Configuration)/netstandard2.0/DotNet.ReproducibleBuilds.Isolated.dll" CopyToOutputDirectory="PreserveNewest" Link="tasks\netstandard2.0\DotNet.ReproducibleBuilds.Isolated.dll" />
+    <None Include="$(RepoRoot)/src/DotNet.ReproducibleBuilds.Isolated/bin/$(Configuration)/netstandard2.0/DotNet.ReproducibleBuilds.Isolated.deps.json" CopyToOutputDirectory="PreserveNewest" Link="tasks\netstandard2.0\DotNet.ReproducibleBuilds.Isolated.deps.json" />
   </ItemGroup>
 
   <ItemGroup>
