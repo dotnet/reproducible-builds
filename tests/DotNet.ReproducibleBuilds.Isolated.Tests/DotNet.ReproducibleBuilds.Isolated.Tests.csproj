@@ -46,8 +46,10 @@
     <!-- Copy main project resources to output directory matching NuGet package layout -->
     <None Include="$(RepoRoot)/src/DotNet.ReproducibleBuilds.Isolated/Sdk/*.props" CopyToOutputDirectory="PreserveNewest" Link="Sdk\%(Filename)%(Extension)" />
     <None Include="$(RepoRoot)/src/DotNet.ReproducibleBuilds.Isolated/Sdk/*.targets" CopyToOutputDirectory="PreserveNewest" Link="Sdk\%(Filename)%(Extension)" />
-    <None Include="$(RepoRoot)/src/DotNet.ReproducibleBuilds.Isolated/bin/$(Configuration)/netstandard2.0/DotNet.ReproducibleBuilds.Isolated.dll" CopyToOutputDirectory="PreserveNewest" Link="tasks\netstandard2.0\DotNet.ReproducibleBuilds.Isolated.dll" />
-    <None Include="$(RepoRoot)/src/DotNet.ReproducibleBuilds.Isolated/bin/$(Configuration)/netstandard2.0/DotNet.ReproducibleBuilds.Isolated.deps.json" CopyToOutputDirectory="PreserveNewest" Link="tasks\netstandard2.0\DotNet.ReproducibleBuilds.Isolated.deps.json" />
+    <None Include="$(RepoRoot)/src/DotNet.ReproducibleBuilds.Isolated/bin/$(Configuration)/net472/DotNet.ReproducibleBuilds.Isolated.dll" CopyToOutputDirectory="PreserveNewest" Link="tasks\net472\DotNet.ReproducibleBuilds.Isolated.dll" />
+    <None Include="$(RepoRoot)/src/DotNet.ReproducibleBuilds.Isolated/bin/$(Configuration)/net472/DotNet.ReproducibleBuilds.Isolated.deps.json" CopyToOutputDirectory="PreserveNewest" Link="tasks\net472\DotNet.ReproducibleBuilds.Isolated.deps.json" />
+    <None Include="$(RepoRoot)/src/DotNet.ReproducibleBuilds.Isolated/bin/$(Configuration)/net6.0/DotNet.ReproducibleBuilds.Isolated.dll" CopyToOutputDirectory="PreserveNewest" Link="tasks\net6.0\DotNet.ReproducibleBuilds.Isolated.dll" />
+    <None Include="$(RepoRoot)/src/DotNet.ReproducibleBuilds.Isolated/bin/$(Configuration)/net6.0/DotNet.ReproducibleBuilds.Isolated.deps.json" CopyToOutputDirectory="PreserveNewest" Link="tasks\net6.0\DotNet.ReproducibleBuilds.Isolated.deps.json" />
   </ItemGroup>
 
   <ItemGroup>

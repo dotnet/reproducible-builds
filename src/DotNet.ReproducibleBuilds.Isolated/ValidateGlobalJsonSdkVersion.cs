@@ -15,6 +15,14 @@ namespace DotNet.ReproducibleBuilds.Isolated;
 /// </remarks>
 public class ValidateGlobalJsonSdkVersion : Task
 {
+#if NET
+    static ValidateGlobalJsonSdkVersion()
+    {
+        // Register resolver for hostfxr to handle Alpine Linux and other non-standard paths
+        HostFxrResolver.Register();
+    }
+#endif
+
     /// <summary>
     /// The working directory to search for global.json.
     /// Typically set to $(MSBuildProjectDirectory).
