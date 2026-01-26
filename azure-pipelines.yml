@@ -53,6 +53,34 @@ stages:
       displayName: Publish build packages
       artifact: BuildPackages
 
+  # Test on Linux (both glibc and musl) to verify hostfxr resolution works across distributions
+  - job: TestLinux
+    displayName: 'Test on Linux'
+    pool:
+      vmImage: ubuntu-latest
+
+    strategy:
+      matrix:
+        Alpine:
+          dockerImage: 'mcr.microsoft.com/dotnet/sdk:10.0-alpine'
+          displayName: 'Alpine (musl)'
+        Ubuntu:
+          dockerImage: 'mcr.microsoft.com/dotnet/sdk:10.0'
+          displayName: 'Ubuntu (glibc)'
+
+    steps:
+    - script: |
+        docker run --rm -v "$(Build.SourcesDirectory):/src" -w /src $(dockerImage) sh -c '
+          rm -rf src/*/obj tests/*/obj &&
+          dotnet test tests/DotNet.ReproducibleBuilds.Tests/DotNet.ReproducibleBuilds.Tests.csproj --framework net8.0 &&
+          dotnet test tests/DotNet.ReproducibleBuilds.Tests/DotNet.ReproducibleBuilds.Tests.csproj --framework net9.0 &&
+          dotnet test tests/DotNet.ReproducibleBuilds.Tests/DotNet.ReproducibleBuilds.Tests.csproj --framework net10.0 &&
+          dotnet test tests/DotNet.ReproducibleBuilds.Isolated.Tests/DotNet.ReproducibleBuilds.Isolated.Tests.csproj --framework net8.0 &&
+          dotnet test tests/DotNet.ReproducibleBuilds.Isolated.Tests/DotNet.ReproducibleBuilds.Isolated.Tests.csproj --framework net9.0 &&
+          dotnet test tests/DotNet.ReproducibleBuilds.Isolated.Tests/DotNet.ReproducibleBuilds.Isolated.Tests.csproj --framework net10.0
+        '
+      displayName: 'Test in $(displayName) Docker container'
+
 # Keep signing variables in a separate stage
 - stage: CodeSign
   condition: and(succeeded('Build'), not(eq(variables['build.reason'], 'PullRequest')))
