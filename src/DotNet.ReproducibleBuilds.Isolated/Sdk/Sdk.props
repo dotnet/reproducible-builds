@@ -6,9 +6,15 @@
     at https://github.com/dotnet/reproducible-builds/blob/main/docs/Reproducible-MSBuild/Techniques/toc.md
   -->
 
+  <!-- Use net6.0 task for .NET Core, net472 for .NET Framework -->
   <UsingTask
+    Condition="'$(MSBuildRuntimeType)' == 'Core'"
     TaskName="DotNet.ReproducibleBuilds.Isolated.ValidateGlobalJsonSdkVersion"
-    AssemblyFile="$(MSBuildThisFileDirectory)..\tasks\netstandard2.0\DotNet.ReproducibleBuilds.Isolated.dll" />
+    AssemblyFile="$(MSBuildThisFileDirectory)..\tasks\net6.0\DotNet.ReproducibleBuilds.Isolated.dll" />
+  <UsingTask
+    Condition="'$(MSBuildRuntimeType)' != 'Core'"
+    TaskName="DotNet.ReproducibleBuilds.Isolated.ValidateGlobalJsonSdkVersion"
+    AssemblyFile="$(MSBuildThisFileDirectory)..\tasks\net472\DotNet.ReproducibleBuilds.Isolated.dll" />
 
   <!--
     Restrict the reference assembly search path to avoid machine-specific dependencies. See
