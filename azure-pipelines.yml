@@ -71,13 +71,7 @@ stages:
     steps:
     - script: |
         docker run --rm -v "$(Build.SourcesDirectory):/src" -w /src $(dockerImage) sh -c '
-          rm -rf src/*/obj tests/*/obj &&
-          dotnet test tests/DotNet.ReproducibleBuilds.Tests/DotNet.ReproducibleBuilds.Tests.csproj --framework net8.0 &&
-          dotnet test tests/DotNet.ReproducibleBuilds.Tests/DotNet.ReproducibleBuilds.Tests.csproj --framework net9.0 &&
-          dotnet test tests/DotNet.ReproducibleBuilds.Tests/DotNet.ReproducibleBuilds.Tests.csproj --framework net10.0 &&
-          dotnet test tests/DotNet.ReproducibleBuilds.Isolated.Tests/DotNet.ReproducibleBuilds.Isolated.Tests.csproj --framework net8.0 &&
-          dotnet test tests/DotNet.ReproducibleBuilds.Isolated.Tests/DotNet.ReproducibleBuilds.Isolated.Tests.csproj --framework net9.0 &&
-          dotnet test tests/DotNet.ReproducibleBuilds.Isolated.Tests/DotNet.ReproducibleBuilds.Isolated.Tests.csproj --framework net10.0
+          dotnet test dirs.proj
         '
       displayName: 'Test in $(displayName) Docker container'
 
