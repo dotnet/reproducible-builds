@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using System.Reflection;
+using System.Runtime.InteropServices;
 
 namespace HostFxrProbe;
 
@@ -15,6 +16,7 @@ namespace HostFxrProbe;
 internal static class Program
 {
     private const int ExitSuccess = 0;
+    private const int ExitHostFxrAlreadyLoaded = 1;
     private const int ExitDllNotFound = 2;
     private const int ExitOtherFailure = 3;
 
@@ -31,6 +33,16 @@ internal static class Program
         {
             Console.Error.WriteLine($"Task DLL not found: {taskDllPath}");
             return ExitOtherFailure;
+        }
+
+        // Defend against the test going green via an already-loaded hostfxr in this process.
+        // If something else loaded hostfxr before the task's P/Invoke runs, Windows would
+        // satisfy the [DllImport("hostfxr")] from the already-loaded module and HostFxrResolver
+        // would never be exercised.
+        if (GetModuleHandleW("hostfxr.dll") != IntPtr.Zero)
+        {
+            Console.Error.WriteLine("PRECONDITION FAILED: hostfxr.dll is already loaded in this process; the test cannot prove HostFxrResolver did anything.");
+            return ExitHostFxrAlreadyLoaded;
         }
 
         // The task DLL is built with ExcludeAssets="Runtime" for Microsoft.Build.Utilities.Core,
@@ -52,6 +64,17 @@ internal static class Program
         try
         {
             Assembly taskAsm = Assembly.LoadFrom(taskDllPath);
+
+            // Second precondition: loading the task assembly (and any transitive deps the loader
+            // pulls in) must not have mapped hostfxr.dll into the process either. If it did, the
+            // P/Invoke below would bind to the pre-loaded module and bypass HostFxrResolver
+            // entirely - the test would go green without exercising the production code.
+            if (GetModuleHandleW("hostfxr.dll") != IntPtr.Zero)
+            {
+                Console.Error.WriteLine("PRECONDITION FAILED: hostfxr.dll was loaded as a side effect of Assembly.LoadFrom; the test cannot prove HostFxrResolver did anything.");
+                return ExitHostFxrAlreadyLoaded;
+            }
+
             Type taskType = taskAsm.GetType("DotNet.ReproducibleBuilds.Isolated.ValidateGlobalJsonSdkVersion", throwOnError: true)!;
             MethodInfo setErrorWriter = taskType.GetMethod(
                 "hostfxr_set_error_writer",
@@ -93,4 +116,8 @@ internal static class Program
         }
         return null;
     }
+
+    [DllImport("kernel32", CharSet = CharSet.Unicode, SetLastError = true, ExactSpelling = true)]
+    private static extern IntPtr GetModuleHandleW(string lpModuleName);
 }
+

@@ -73,9 +73,11 @@
 
   <!-- Copy the HostFxrProbe output into the test bin so HostFxrResolverTests can spawn it as a subprocess.
        Uses a target instead of a static ItemGroup so the glob is evaluated after the probe ProjectReference
-       has produced its output (the bin dir doesn't exist at MSBuild evaluation time on a clean checkout). -->
+       has produced its output (the bin dir doesn't exist at MSBuild evaluation time on a clean checkout).
+       DependsOnTargets makes the dependency on the probe build explicit. -->
   <Target Name="_CollectHostFxrProbeOutputs"
           BeforeTargets="AssignTargetPaths"
+          DependsOnTargets="ResolveProjectReferences"
           Condition="$([MSBuild]::IsOSPlatform('Windows'))">
     <ItemGroup>
       <_HostFxrProbeOutput Include="$(RepoRoot)tests/HostFxrProbe/bin/$(Configuration)/net472/*.*" />
