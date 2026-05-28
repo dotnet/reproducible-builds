@@ -41,6 +41,24 @@
     </ProjectReference>
   </ItemGroup>
 
+  <!-- The HostFxrProbe is a net472 console app used by HostFxrResolverTests to exercise the hostfxr P/Invoke
+       from a .NET Framework process. It only builds on Windows (the bug it guards against is Windows-only). -->
+  <ItemGroup Condition="$([MSBuild]::IsOSPlatform('Windows'))">
+    <ProjectReference Include="$(RepoRoot)/tests/HostFxrProbe/HostFxrProbe.csproj">
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+      <SkipGetTargetFrameworkProperties>true</SkipGetTargetFrameworkProperties>
+      <GlobalPropertiesToRemove>TargetFramework;TargetFrameworks</GlobalPropertiesToRemove>
+    </ProjectReference>
+  </ItemGroup>
+
+  <!-- HostFxrResolverTests and its ProcessHelpers exercise the net472 task via the StubTaskHarness.
+       They have no signal on other TFMs and would quadruple wall time and flake surface on Windows
+       runs, so compile them out for non-net472 targets. -->
+  <ItemGroup Condition="'$(TargetFramework)' != 'net472'">
+    <Compile Remove="HostFxrResolverTests.cs" />
+    <Compile Remove="ProcessHelpers.cs" />
+  </ItemGroup>
+
   <ItemGroup>
     <Compile Include="../Shared/*.cs" LinkBase="Shared" />
 
@@ -52,6 +70,20 @@
     <None Include="$(RepoRoot)/src/DotNet.ReproducibleBuilds.Isolated/bin/$(Configuration)/net6.0/DotNet.ReproducibleBuilds.Isolated.dll" CopyToOutputDirectory="PreserveNewest" Link="tasks\net6.0\DotNet.ReproducibleBuilds.Isolated.dll" />
     <None Include="$(RepoRoot)/src/DotNet.ReproducibleBuilds.Isolated/bin/$(Configuration)/net6.0/DotNet.ReproducibleBuilds.Isolated.deps.json" CopyToOutputDirectory="PreserveNewest" Link="tasks\net6.0\DotNet.ReproducibleBuilds.Isolated.deps.json" />
   </ItemGroup>
+
+  <!-- Copy the HostFxrProbe output into the test bin so HostFxrResolverTests can spawn it as a subprocess.
+       Uses a target instead of a static ItemGroup so the glob is evaluated after the probe ProjectReference
+       has produced its output (the bin dir doesn't exist at MSBuild evaluation time on a clean checkout). -->
+  <Target Name="_CollectHostFxrProbeOutputs"
+          BeforeTargets="AssignTargetPaths"
+          Condition="$([MSBuild]::IsOSPlatform('Windows'))">
+    <ItemGroup>
+      <_HostFxrProbeOutput Include="$(RepoRoot)tests/HostFxrProbe/bin/$(Configuration)/net472/*.*" />
+      <None Include="@(_HostFxrProbeOutput)"
+            CopyToOutputDirectory="PreserveNewest"
+            Link="probes/%(Filename)%(Extension)" />
+    </ItemGroup>
+  </Target>
 
   <ItemGroup>
     <Using Include="Xunit" />
