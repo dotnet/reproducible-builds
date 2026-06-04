@@ -26,10 +26,10 @@ public class HostFxrResolverTests
             "Issue #79 is specific to Visual Studio hosting MSBuild on .NET Framework, which only happens on Windows.");
 
         string testBin = AppContext.BaseDirectory;
-        string probeExe = Path.Combine(testBin, "probes", "HostFxrProbe.exe");
+        string harnessExe = Path.Combine(testBin, "harness", "StubTaskHarness.exe");
         string taskDll = Path.Combine(testBin, "tasks", "net472", "DotNet.ReproducibleBuilds.Isolated.dll");
 
-        File.Exists(probeExe).Should().BeTrue($"the probe must be copied into the test bin (looked at {probeExe})");
+        File.Exists(harnessExe).Should().BeTrue($"the harness must be copied into the test bin (looked at {harnessExe})");
         File.Exists(taskDll).Should().BeTrue($"the net472 task DLL must be copied into the test bin (looked at {taskDll})");
 
         string dotnetDir = FindDotnetExeDirectory();
@@ -41,13 +41,13 @@ public class HostFxrResolverTests
         // through Windows' default DLL search, otherwise the P/Invoke would succeed even without
         // the resolver. The resolver must reach `<dotnet>\host\fxr\<ver>\hostfxr.dll` for the
         // load to succeed.
-        AssertNoHostFxrIn(Path.GetDirectoryName(probeExe)!);
+        AssertNoHostFxrIn(Path.GetDirectoryName(harnessExe)!);
         AssertNoHostFxrIn(Path.GetDirectoryName(taskDll)!);
         AssertNoHostFxrIn(dotnetDir);
         AssertNoHostFxrIn(system32);
         AssertNoHostFxrIn(systemRoot);
 
-        var psi = new ProcessStartInfo(probeExe, $"\"{taskDll}\"")
+        var psi = new ProcessStartInfo(harnessExe, $"\"{taskDll}\"")
         {
             UseShellExecute = false,
             RedirectStandardOutput = true,
@@ -69,7 +69,7 @@ public class HostFxrResolverTests
         psi.EnvironmentVariables.Remove("DOTNET_MSBUILD_SDK_RESOLVER_CLI_DIR");
 
         // Use async OutputDataReceived/ErrorDataReceived rather than synchronous ReadToEnd calls so
-        // a chatty probe can't deadlock by filling either pipe's OS buffer while we're blocked on
+        // a chatty harness can't deadlock by filling either pipe's OS buffer while we're blocked on
         // the other stream.
         var stdout = new StringBuilder();
         var stderr = new StringBuilder();

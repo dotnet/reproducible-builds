@@ -41,10 +41,11 @@
     </ProjectReference>
   </ItemGroup>
 
-  <!-- The HostFxrProbe is a net472 console app used by HostFxrResolverTests to exercise the hostfxr P/Invoke
-       from a .NET Framework process. It only builds on Windows (the bug it guards against is Windows-only). -->
+  <!-- The StubTaskHarness is a net472 console app used by HostFxrResolverTests to exercise the hostfxr
+       P/Invoke from a .NET Framework process. It only builds on Windows (the bug it guards against is
+       Windows-only). -->
   <ItemGroup Condition="$([MSBuild]::IsOSPlatform('Windows'))">
-    <ProjectReference Include="$(RepoRoot)/tests/HostFxrProbe/HostFxrProbe.csproj">
+    <ProjectReference Include="$(RepoRoot)/tests/StubTaskHarness/StubTaskHarness.csproj">
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
       <SkipGetTargetFrameworkProperties>true</SkipGetTargetFrameworkProperties>
       <GlobalPropertiesToRemove>TargetFramework;TargetFrameworks</GlobalPropertiesToRemove>
@@ -71,19 +72,19 @@
     <None Include="$(RepoRoot)/src/DotNet.ReproducibleBuilds.Isolated/bin/$(Configuration)/net6.0/DotNet.ReproducibleBuilds.Isolated.deps.json" CopyToOutputDirectory="PreserveNewest" Link="tasks\net6.0\DotNet.ReproducibleBuilds.Isolated.deps.json" />
   </ItemGroup>
 
-  <!-- Copy the HostFxrProbe output into the test bin so HostFxrResolverTests can spawn it as a subprocess.
-       Uses a target instead of a static ItemGroup so the glob is evaluated after the probe ProjectReference
+  <!-- Copy the StubTaskHarness output into the test bin so HostFxrResolverTests can spawn it as a subprocess.
+       Uses a target instead of a static ItemGroup so the glob is evaluated after the harness ProjectReference
        has produced its output (the bin dir doesn't exist at MSBuild evaluation time on a clean checkout).
-       DependsOnTargets makes the dependency on the probe build explicit. -->
-  <Target Name="_CollectHostFxrProbeOutputs"
+       DependsOnTargets makes the dependency on the harness build explicit. -->
+  <Target Name="_CollectStubTaskHarnessOutputs"
           BeforeTargets="AssignTargetPaths"
           DependsOnTargets="ResolveProjectReferences"
           Condition="$([MSBuild]::IsOSPlatform('Windows'))">
     <ItemGroup>
-      <_HostFxrProbeOutput Include="$(RepoRoot)tests/HostFxrProbe/bin/$(Configuration)/net472/*.*" />
-      <None Include="@(_HostFxrProbeOutput)"
+      <_StubTaskHarnessOutput Include="$(RepoRoot)tests/StubTaskHarness/bin/$(Configuration)/net472/*.*" />
+      <None Include="@(_StubTaskHarnessOutput)"
             CopyToOutputDirectory="PreserveNewest"
-            Link="probes/%(Filename)%(Extension)" />
+            Link="harness/%(Filename)%(Extension)" />
     </ItemGroup>
   </Target>
 

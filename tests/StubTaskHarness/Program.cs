@@ -3,15 +3,17 @@ using System.IO;
 using System.Reflection;
 using System.Runtime.InteropServices;
 
-namespace HostFxrProbe;
+namespace StubTaskHarness;
 
 /// <summary>
-/// Probe used by <c>HostFxrResolverTests</c> to exercise the hostfxr P/Invoke from a
-/// .NET Framework process under controlled environment conditions.
-///
-/// Loads the net472 build of the <c>DotNet.ReproducibleBuilds.Isolated</c> task assembly,
-/// invokes the static <c>hostfxr_set_error_writer</c> P/Invoke via reflection, and reports
-/// the outcome via exit code and stderr.
+/// Stub MSBuild host used by <c>HostFxrResolverTests</c> to exercise the hostfxr P/Invoke from a
+/// .NET Framework process under controlled environment conditions. It is the minimal stand-in for
+/// an MSBuild host: it loads <c>Microsoft.Build.Utilities.Core</c> (just enough for the task type
+/// to resolve), <c>Assembly.LoadFrom</c>s the net472 build of the
+/// <c>DotNet.ReproducibleBuilds.Isolated</c> task assembly, invokes the static
+/// <c>hostfxr_set_error_writer</c> P/Invoke via reflection, and reports the outcome via exit code
+/// and stderr. It does not load MSBuild's build engine (no <c>BuildManager</c>, no targets
+/// execution).
 /// </summary>
 internal static class Program
 {
@@ -24,7 +26,7 @@ internal static class Program
     {
         if (args.Length != 1)
         {
-            Console.Error.WriteLine("Usage: HostFxrProbe.exe <path-to-task-dll>");
+            Console.Error.WriteLine("Usage: StubTaskHarness.exe <path-to-task-dll>");
             return ExitOtherFailure;
         }
 
@@ -39,20 +41,20 @@ internal static class Program
         // If something else loaded hostfxr before the task's P/Invoke runs, Windows would
         // satisfy the [DllImport("hostfxr")] from the already-loaded module and HostFxrResolver
         // would never be exercised.
-        if (GetModuleHandleW("hostfxr.dll") != IntPtr.Zero)
+        if (IsHostFxrLoaded())
         {
             Console.Error.WriteLine("PRECONDITION FAILED: hostfxr.dll is already loaded in this process; the test cannot prove HostFxrResolver did anything.");
             return ExitHostFxrAlreadyLoaded;
         }
 
         // The task DLL is built with ExcludeAssets="Runtime" for Microsoft.Build.Utilities.Core,
-        // so its dependencies live in the probe's own bin dir. Help the loader find them.
+        // so its dependencies live in the harness's own bin dir. Help the loader find them.
         string taskDir = Path.GetDirectoryName(taskDllPath)!;
-        string probeDir = AppDomain.CurrentDomain.BaseDirectory;
+        string harnessDir = AppDomain.CurrentDomain.BaseDirectory;
         AppDomain.CurrentDomain.AssemblyResolve += (sender, e) =>
         {
             string simpleName = new AssemblyName(e.Name).Name;
-            string candidate = Path.Combine(probeDir, simpleName + ".dll");
+            string candidate = Path.Combine(harnessDir, simpleName + ".dll");
             if (File.Exists(candidate))
             {
                 return Assembly.LoadFrom(candidate);
@@ -69,7 +71,7 @@ internal static class Program
             // pulls in) must not have mapped hostfxr.dll into the process either. If it did, the
             // P/Invoke below would bind to the pre-loaded module and bypass HostFxrResolver
             // entirely - the test would go green without exercising the production code.
-            if (GetModuleHandleW("hostfxr.dll") != IntPtr.Zero)
+            if (IsHostFxrLoaded())
             {
                 Console.Error.WriteLine("PRECONDITION FAILED: hostfxr.dll was loaded as a side effect of Assembly.LoadFrom; the test cannot prove HostFxrResolver did anything.");
                 return ExitHostFxrAlreadyLoaded;
@@ -104,6 +106,8 @@ internal static class Program
             return ExitOtherFailure;
         }
     }
+
+    private static bool IsHostFxrLoaded() => GetModuleHandleW("hostfxr.dll") != IntPtr.Zero;
 
     private static T? FindInner<T>(Exception ex) where T : Exception
     {

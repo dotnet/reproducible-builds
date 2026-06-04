@@ -7,8 +7,8 @@
     <Nullable>enable</Nullable>
 
     <!--
-      Force x64 so the probe matches the architecture of production MSBuild.exe.
-      A 32-bit probe would search DOTNET_ROOT(x86) and find a different (or no) dotnet install.
+      Force x64 so the harness matches the architecture of production MSBuild.exe.
+      A 32-bit harness would search DOTNET_ROOT(x86) and find a different (or no) dotnet install.
     -->
     <PlatformTarget>x64</PlatformTarget>
     <Prefer32Bit>false</Prefer32Bit>
@@ -19,7 +19,7 @@
 
   <ItemGroup>
     <!--
-      The probe loads the net472 task DLL by path and invokes hostfxr_set_error_writer via reflection.
+      The harness loads the net472 task DLL by path and invokes hostfxr_set_error_writer via reflection.
       Microsoft.Build.Utilities.Core is required at runtime because the task type derives from Microsoft.Build.Utilities.Task.
     -->
     <PackageReference Include="Microsoft.Build.Utilities.Core" />
