@@ -42,9 +42,8 @@
   </ItemGroup>
 
   <!-- The StubTaskHarness is a net472 console app used by HostFxrResolverTests to exercise the hostfxr
-       P/Invoke from a .NET Framework process. It only builds on Windows (the bug it guards against is
-       Windows-only). -->
-  <ItemGroup Condition="$([MSBuild]::IsOSPlatform('Windows'))">
+       P/Invoke from a .NET Framework process. The bug it guards against is Windows-only. -->
+  <ItemGroup>
     <ProjectReference Include="$(RepoRoot)/tests/StubTaskHarness/StubTaskHarness.csproj">
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
       <SkipGetTargetFrameworkProperties>true</SkipGetTargetFrameworkProperties>
@@ -72,20 +71,20 @@
     <None Include="$(RepoRoot)/src/DotNet.ReproducibleBuilds.Isolated/bin/$(Configuration)/net6.0/DotNet.ReproducibleBuilds.Isolated.deps.json" CopyToOutputDirectory="PreserveNewest" Link="tasks\net6.0\DotNet.ReproducibleBuilds.Isolated.deps.json" />
   </ItemGroup>
 
-  <!-- Copy the StubTaskHarness output into the test bin so HostFxrResolverTests can spawn it as a subprocess.
-       Uses a target instead of a static ItemGroup so the glob is evaluated after the harness ProjectReference
-       has produced its output (the bin dir doesn't exist at MSBuild evaluation time on a clean checkout).
-       DependsOnTargets makes the dependency on the harness build explicit. -->
-  <Target Name="_CollectStubTaskHarnessOutputs"
-          BeforeTargets="AssignTargetPaths"
-          DependsOnTargets="ResolveProjectReferences"
-          Condition="$([MSBuild]::IsOSPlatform('Windows'))">
-    <ItemGroup>
-      <_StubTaskHarnessOutput Include="$(RepoRoot)tests/StubTaskHarness/bin/$(Configuration)/net472/*.*" />
-      <None Include="@(_StubTaskHarnessOutput)"
-            CopyToOutputDirectory="PreserveNewest"
-            Link="harness/%(Filename)%(Extension)" />
-    </ItemGroup>
+  <!-- Copy the StubTaskHarness output into the test bin so HostFxrResolverTests can spawn it as a
+       subprocess. Ask the harness project for its runtime closure rather than assuming a bin layout
+       that BaseOutputPath / UseArtifactsOutput / etc could relocate. -->
+  <Target Name="_CopyStubTaskHarnessToOutput"
+          AfterTargets="CopyFilesToOutputDirectory">
+    <MSBuild Projects="$(RepoRoot)tests/StubTaskHarness/StubTaskHarness.csproj"
+             Targets="BuiltProjectOutputGroup;DebugSymbolsProjectOutputGroup;SatelliteDllsProjectOutputGroup;ReferenceCopyLocalPathsOutputGroup"
+             RemoveProperties="TargetFramework;TargetFrameworks">
+      <Output TaskParameter="TargetOutputs" ItemName="_StubTaskHarnessOutput" />
+    </MSBuild>
+    <Copy SourceFiles="@(_StubTaskHarnessOutput)"
+          DestinationFiles="@(_StubTaskHarnessOutput->'$(OutDir)harness\%(Filename)%(Extension)')"
+          SkipUnchangedFiles="true"
+          OverwriteReadOnlyFiles="true" />
   </Target>
 
   <ItemGroup>
