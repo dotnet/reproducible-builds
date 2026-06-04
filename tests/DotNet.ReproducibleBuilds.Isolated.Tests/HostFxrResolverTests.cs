@@ -1,6 +1,5 @@
 using System.Diagnostics;
 using System.Runtime.InteropServices;
-using System.Text;
 
 using FluentAssertions;
 
@@ -49,10 +48,6 @@ public class HostFxrResolverTests
 
         var psi = new ProcessStartInfo(harnessExe, $"\"{taskDll}\"")
         {
-            UseShellExecute = false,
-            RedirectStandardOutput = true,
-            RedirectStandardError = true,
-            CreateNoWindow = true,
             WorkingDirectory = systemRoot,
         };
 
@@ -68,33 +63,9 @@ public class HostFxrResolverTests
         psi.EnvironmentVariables.Remove("DOTNET_HOST_PATH");
         psi.EnvironmentVariables.Remove("DOTNET_MSBUILD_SDK_RESOLVER_CLI_DIR");
 
-        // Use async OutputDataReceived/ErrorDataReceived rather than synchronous ReadToEnd calls so
-        // a chatty harness can't deadlock by filling either pipe's OS buffer while we're blocked on
-        // the other stream.
-        var stdout = new StringBuilder();
-        var stderr = new StringBuilder();
-        using var process = new Process { StartInfo = psi };
-        process.OutputDataReceived += (_, e) =>
-        {
-            if (e.Data is not null)
-            {
-                stdout.AppendLine(e.Data);
-            }
-        };
-        process.ErrorDataReceived += (_, e) =>
-        {
-            if (e.Data is not null)
-            {
-                stderr.AppendLine(e.Data);
-            }
-        };
+        var (exitCode, stdout, stderr) = ProcessHelpers.RunAndWaitForExit(psi);
 
-        process.Start();
-        process.BeginOutputReadLine();
-        process.BeginErrorReadLine();
-        process.WaitForExit();
-
-        process.ExitCode.Should().Be(
+        exitCode.Should().Be(
             0,
             $"the net472 task must resolve hostfxr through HostFxrResolver.{Environment.NewLine}" +
             $"stdout: {stdout}{Environment.NewLine}" +
