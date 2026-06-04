@@ -21,10 +21,18 @@ namespace DotNet.ReproducibleBuilds.Isolated;
 /// <c>libhostfxr.so</c> lives at <c>{dotnet-root}/host/fxr/{version}/</c> and the loader
 /// doesn't probe that path on its own.
 ///
-/// On .NET Framework, AssemblyLoadContext is not available and the default Windows DLL search order will
-/// never find hostfxr (it lives in a versioned subdirectory of the dotnet install, not on PATH). To make
-/// the subsequent <c>[DllImport("hostfxr")]</c> bind, this class eagerly calls <c>LoadLibraryW</c> on the
-/// full path of the highest-version hostfxr it can find.
+/// On .NET Framework, AssemblyLoadContext is not available. This branch is what loads hostfxr when
+/// the net472 task runs inside Visual Studio 2022+'s in-process MSBuild engine, which is the scenario
+/// in dotnet/reproducible-builds#79. The MSBuild engine VS hosts in-process is itself compiled for
+/// .NET, so its <c>SdkResolverService</c> short-circuits in-box SDK resolution and never loads the
+/// plugin <c>Microsoft.DotNet.MSBuildSdkResolver</c> whose static ctor would have preloaded hostfxr
+/// (via <c>Microsoft.DotNet.NativeWrapper.Interop.PreloadWindowsLibrary</c>). Standalone netfx
+/// <c>MSBuild.exe</c> is compiled net472, doesn't short-circuit, loads the plugin resolver, and gets
+/// the preload for free - which is why <c>dotnet build</c> and command-line <c>MSBuild.exe</c>
+/// succeed while VS IDE fails. Without this class hostfxr is never mapped into the netfx process and
+/// the default Windows DLL search order won't find it (it lives in a versioned subdirectory of the
+/// dotnet install, not on PATH), so we eagerly <c>LoadLibraryExW</c> the highest-version copy we can
+/// find.
 /// </remarks>
 internal static class HostFxrResolver
 {
@@ -71,14 +79,13 @@ internal static class HostFxrResolver
 
             s_resolverAdded = true;
 #else
-            // On .NET Framework the task runs inside an MSBuild process that does not preload hostfxr.
-            // The default Windows DLL search order can't locate it because hostfxr.dll lives in
-            // `<dotnet-root>\host\fxr\<version>\hostfxr.dll`, which is not on PATH. Eagerly LoadLibrary
-            // the highest-version copy so the [DllImport("hostfxr")] in ValidateGlobalJsonSdkVersion
-            // binds to the already-loaded module.
+            // On .NET Framework hosts where VS's in-process MSBuild bypasses Microsoft.DotNet.MSBuildSdkResolver
+            // (see class remarks), nothing else has loaded hostfxr. Eagerly LoadLibrary the highest-version
+            // copy from the installed dotnet runtime so the [DllImport("hostfxr")] in
+            // ValidateGlobalJsonSdkVersion can bind to the already-loaded module.
             //
             // This branch is Windows-only - net472 outside Windows isn't a real scenario for this task,
-            // and LoadLibraryW lives in kernel32.
+            // and LoadLibraryExW lives in kernel32.
             if (!IsWindows)
             {
                 s_resolverAdded = true;
@@ -117,7 +124,11 @@ internal static class HostFxrResolver
     {
         foreach (string hostFxrAssembly in EnumerateHostFxrCandidates())
         {
-            if (LoadLibraryW(hostFxrAssembly) != IntPtr.Zero)
+            // LOAD_WITH_ALTERED_SEARCH_PATH (0x8) tells the loader to resolve hostfxr's own transitive
+            // dependencies (e.g. hostpolicy.dll, which lives next to hostfxr in the same versioned dir)
+            // from hostfxr's directory rather than the process's default DLL search path. Matches what
+            // Microsoft.DotNet.NativeWrapper does when the SDK resolver preloads hostfxr.
+            if (LoadLibraryExW(hostFxrAssembly, IntPtr.Zero, LOAD_WITH_ALTERED_SEARCH_PATH) != IntPtr.Zero)
             {
                 return true;
             }
@@ -126,8 +137,10 @@ internal static class HostFxrResolver
         return false;
     }
 
+    private const int LOAD_WITH_ALTERED_SEARCH_PATH = 0x8;
+
     [DllImport("kernel32", CharSet = CharSet.Unicode, SetLastError = true, ExactSpelling = true)]
-    private static extern IntPtr LoadLibraryW(string lpFileName);
+    private static extern IntPtr LoadLibraryExW(string lpFileName, IntPtr hFile, int dwFlags);
 #endif
 
     /// <summary>
