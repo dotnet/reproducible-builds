@@ -1,0 +1,34 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net472</TargetFramework>
+    <LangVersion>latest</LangVersion>
+    <Nullable>enable</Nullable>
+
+    <!--
+      Force x64 so the harness matches VS 2022+'s MSBuild.exe (which is x64).
+      Coverage gaps not exercised here:
+        * VS 2019 and earlier shipped a 32-bit (x86) MSBuild.exe. VS 2019 is out of mainstream support.
+        * MSBuildTaskHost.exe (used for 32-bit out-of-proc task hosting) defaults to x86.
+        * arm64-native MSBuild on arm64 Windows uses arm64 hostfxr; this x64 harness would probe the
+          x64 .NET install instead.
+      All three are acceptable misses given the test's purpose (regression-prevention for the
+      common VS-hosted scenario in issue #79).
+    -->
+    <PlatformTarget>x64</PlatformTarget>
+    <Prefer32Bit>false</Prefer32Bit>
+
+    <IsPackable>false</IsPackable>
+    <IncludeInSolutionFile>false</IncludeInSolutionFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!--
+      The harness loads the net472 task DLL by path and invokes hostfxr_set_error_writer via reflection.
+      Microsoft.Build.Utilities.Core is required at runtime because the task type derives from Microsoft.Build.Utilities.Task.
+    -->
+    <PackageReference Include="Microsoft.Build.Utilities.Core" />
+  </ItemGroup>
+
+</Project>
