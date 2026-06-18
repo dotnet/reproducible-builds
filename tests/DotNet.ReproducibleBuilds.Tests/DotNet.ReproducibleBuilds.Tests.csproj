@@ -40,4 +40,12 @@
     <Using Include="Xunit" />
   </ItemGroup>
 
+  <!-- net472 only: MSBuild.ProjectCreation 18.0.0's auto-redirect demands System.Text.Json 10.0.0.3
+       exactly, but no VS install ships that patch. Pin STJ so the right DLL is in the bin; redirect
+       its System.Text.Encodings.Web transitive explicitly (autogen misses it). -->
+  <ItemGroup Condition="'$(TargetFramework)' == 'net472'">
+    <PackageReference Include="System.Text.Json" VersionOverride="10.0.3" />
+    <SuggestedBindingRedirects Include="System.Text.Encodings.Web, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51" MaxVersion="10.0.0.3" />
+  </ItemGroup>
+
 </Project>
